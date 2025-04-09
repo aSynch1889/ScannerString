@@ -251,4 +251,108 @@ class ScannerViewModel: ObservableObject {
             }
         }
     }
+    
+    func exportToXCStrings() {
+        guard !results.isEmpty else {
+            errorMessage = "No results to export"
+            return
+        }
+        
+        let savePanel = NSSavePanel()
+        savePanel.allowedContentTypes = [.init(filenameExtension: "xcstrings")!]
+        savePanel.nameFieldStringValue = "Localizable.xcstrings"
+        
+        if savePanel.runModal() == .OK {
+            guard let outputURL = savePanel.url else { return }
+            
+            do {
+                // 支持的本地化语言
+                let languages = ["en", "zh-Hans", "zh-Hant", "ja"]
+                
+                // 只处理标记为本地化的字符串
+//                let localizedStrings = results.filter { $0.isLocalized }
+                
+                var xcstringsContent = """
+                {
+                  "sourceLanguage" : "en",
+                  "strings" : {
+                """
+                
+                for (index, result) in results.enumerated() {
+                    // 转义字符串中的特殊字符
+                    let escapedContent = result.content
+                        .replacingOccurrences(of: "\"", with: "\\\"")
+                        .replacingOccurrences(of: "\n", with: "\\n")
+                    
+                    xcstringsContent += """
+                    
+                        "\(escapedContent)" : {
+                          "extractionState" : "manual",
+                          "localizations" : {
+                    """
+                    
+                    // 为每种语言添加相同的值（后续可以手动翻译）
+                    for (langIndex, language) in languages.enumerated() {
+                        xcstringsContent += """
+                        
+                            "\(language)" : {
+                              "stringUnit" : {
+                                "state" : "translated",
+                                "value" : "\(escapedContent)"
+                              }
+                            }\(langIndex < languages.count - 1 ? "," : "")
+                        """
+                    }
+                    
+                    xcstringsContent += """
+                        
+                          }
+                        }\(index < results.count - 1 ? "," : "")
+                    """
+                }
+                
+                xcstringsContent += """
+                
+                  },
+                  "version" : "1.0"
+                }
+                """
+                
+                // 确保文件不为空
+                if results.isEmpty {
+                    xcstringsContent = """
+                    {
+                      "sourceLanguage" : "en",
+                      "strings" : {
+                        "NO_STRINGS" : {
+                          "extractionState" : "manual",
+                          "localizations" : {
+                            "en" : {
+                              "stringUnit" : {
+                                "state" : "translated",
+                                "value" : "No localized strings found"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "version" : "1.0"
+                    }
+                    """
+                }
+                
+                // 写入文件
+                try xcstringsContent.write(to: outputURL, atomically: true, encoding: .utf8)
+                
+                // 显示成功消息
+                DispatchQueue.main.async {
+                    self.errorMessage = "XCStrings file generated successfully at: \(outputURL.path)"
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Failed to generate XCStrings file: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
 } 

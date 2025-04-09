@@ -107,7 +107,12 @@ struct ResultsView: View {
                         .buttonStyle(.bordered)
                         
                         Button(action: viewModel.exportToLocalizationFiles) {
-                            Label("Export Localization Files".localized, systemImage: "globe")
+                            Label("Export Strings".localized, systemImage: "text.quote")
+                        }
+                        .buttonStyle(.bordered)
+                        
+                        Button(action: viewModel.exportToXCStrings) {
+                            Label("Export XCStrings".localized, systemImage: "globe")
                         }
                         .buttonStyle(.bordered)
                         .padding(.trailing)
