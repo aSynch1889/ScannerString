@@ -96,24 +96,23 @@ struct ResultsView: View {
                     HStack {
                         Spacer()
                         
-                        Menu {
-                            Button(action: viewModel.exportToJSON) {
-                                Label("Export JSON".localized, systemImage: "square.and.arrow.down")
-                            }
-                            
-                            Button(action: viewModel.exportToCSV) {
-                                Label("Export CSV".localized, systemImage: "tablecells")
-                            }
-                            
-                            Button(action: viewModel.exportToLocalizationFiles) {
-                                Label("Export Localization Files".localized, systemImage: "globe")
-                            }
-                        } label: {
-                            Label("Export".localized, systemImage: "square.and.arrow.up")
+                        Button(action: viewModel.exportToJSON) {
+                            Label("Export JSON".localized, systemImage: "square.and.arrow.down")
                         }
                         .buttonStyle(.bordered)
-                        .padding()
+                        
+                        Button(action: viewModel.exportToCSV) {
+                            Label("Export CSV".localized, systemImage: "tablecells")
+                        }
+                        .buttonStyle(.bordered)
+                        
+                        Button(action: viewModel.exportToLocalizationFiles) {
+                            Label("Export Localization Files".localized, systemImage: "globe")
+                        }
+                        .buttonStyle(.bordered)
+                        .padding(.trailing)
                     }
+                    .padding(.top)
                     
                     List(viewModel.results, id: \.self) { result in
                         VStack(alignment: .leading, spacing: 4) {

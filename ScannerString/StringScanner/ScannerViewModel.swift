@@ -218,48 +218,22 @@ class ScannerViewModel: ObservableObject {
                     let stringsURL = languageURL.appendingPathComponent("Localizable.strings")
                     var stringsContent = ""
                     
-                    // 生成 .xcstrings 文件
-                    let xcstringsURL = languageURL.appendingPathComponent("Localizable.xcstrings")
-                    var xcstringsContent = """
-                    {
-                      "sourceLanguage" : "en",
-                      "strings" : {
-                    """
+                    // 只处理标记为本地化的字符串
+                    let localizedStrings = results.filter { $0.isLocalized }
                     
-                    for (index, result) in results.enumerated() {
-                        if result.isLocalized {
-                            let key = "STRING_\(index)"
-                            let value = result.content
-                            
-                            // .strings 格式
-                            stringsContent += "\"\(key)\" = \"\(value)\";\n"
-                            
-                            // .xcstrings 格式
-                            xcstringsContent += """
-                                "\(key)" : {
-                                  "extractionState" : "manual",
-                                  "localizations" : {
-                                    "\(language)" : {
-                                      "stringUnit" : {
-                                        "state" : "translated",
-                                        "value" : "\(value)"
-                                      }
-                                    }
-                                  }
-                                }
-                            """
-                            
-                            if index < results.count - 1 {
-                                xcstringsContent += ",\n"
-                            }
-                        }
+                    for result in localizedStrings {
+                        // 转义字符串中的特殊字符
+                        let escapedContent = result.content
+                            .replacingOccurrences(of: "\"", with: "\\\"")
+                            .replacingOccurrences(of: "\n", with: "\\n")
+                        
+                        // 添加注释，显示原始位置
+                        stringsContent += "/* \(result.file):\(result.line) */\n"
+                        stringsContent += "\"\(escapedContent)\" = \"\(escapedContent)\";\n\n"
                     }
-                    
-                    xcstringsContent += "\n  }\n}"
                     
                     // 写入文件
                     try stringsContent.write(to: stringsURL, atomically: true, encoding: .utf8)
-                    try xcstringsContent.write(to: xcstringsURL, atomically: true, encoding: .utf8)
                 }
                 
                 // 显示成功消息
