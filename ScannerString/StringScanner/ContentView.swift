@@ -95,17 +95,25 @@ struct ResultsView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        Button(action: viewModel.exportToJSON) {
-                            Label("Export JSON".localized, systemImage: "square.and.arrow.down")
-                        }
-                        .buttonStyle(.bordered)
                         
-                        Button(action: viewModel.exportToCSV) {
-                            Label("Export CSV".localized, systemImage: "tablecells")
+                        Menu {
+                            Button(action: viewModel.exportToJSON) {
+                                Label("Export JSON".localized, systemImage: "square.and.arrow.down")
+                            }
+                            
+                            Button(action: viewModel.exportToCSV) {
+                                Label("Export CSV".localized, systemImage: "tablecells")
+                            }
+                            
+                            Button(action: viewModel.exportToLocalizationFiles) {
+                                Label("Export Localization Files".localized, systemImage: "globe")
+                            }
+                        } label: {
+                            Label("Export".localized, systemImage: "square.and.arrow.up")
                         }
                         .buttonStyle(.bordered)
+                        .padding()
                     }
-                    .padding()
                     
                     List(viewModel.results, id: \.self) { result in
                         VStack(alignment: .leading, spacing: 4) {
@@ -139,4 +147,4 @@ struct ResultsView: View {
 
 #Preview {
     ContentView()
-} 
+}

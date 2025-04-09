@@ -186,4 +186,91 @@ class ScannerViewModel: ObservableObject {
             }
         }
     }
+    
+    func exportToLocalizationFiles() {
+        guard !results.isEmpty else {
+            errorMessage = "No results to export"
+            return
+        }
+        
+        let savePanel = NSOpenPanel()
+        savePanel.canChooseFiles = false
+        savePanel.canChooseDirectories = true
+        savePanel.allowsMultipleSelection = false
+        savePanel.prompt = "Select Output Directory"
+        
+        if savePanel.runModal() == .OK {
+            guard let outputURL = savePanel.url else { return }
+            
+            do {
+                // 创建基础目录结构
+                let baseURL = outputURL.appendingPathComponent("Localization")
+                try FileManager.default.createDirectory(at: baseURL, withIntermediateDirectories: true)
+                
+                // 支持的本地化语言
+                let languages = ["en", "zh-Hans", "zh-Hant", "ja"]
+                
+                for language in languages {
+                    let languageURL = baseURL.appendingPathComponent("\(language).lproj")
+                    try FileManager.default.createDirectory(at: languageURL, withIntermediateDirectories: true)
+                    
+                    // 生成 .strings 文件
+                    let stringsURL = languageURL.appendingPathComponent("Localizable.strings")
+                    var stringsContent = ""
+                    
+                    // 生成 .xcstrings 文件
+                    let xcstringsURL = languageURL.appendingPathComponent("Localizable.xcstrings")
+                    var xcstringsContent = """
+                    {
+                      "sourceLanguage" : "en",
+                      "strings" : {
+                    """
+                    
+                    for (index, result) in results.enumerated() {
+                        if result.isLocalized {
+                            let key = "STRING_\(index)"
+                            let value = result.content
+                            
+                            // .strings 格式
+                            stringsContent += "\"\(key)\" = \"\(value)\";\n"
+                            
+                            // .xcstrings 格式
+                            xcstringsContent += """
+                                "\(key)" : {
+                                  "extractionState" : "manual",
+                                  "localizations" : {
+                                    "\(language)" : {
+                                      "stringUnit" : {
+                                        "state" : "translated",
+                                        "value" : "\(value)"
+                                      }
+                                    }
+                                  }
+                                }
+                            """
+                            
+                            if index < results.count - 1 {
+                                xcstringsContent += ",\n"
+                            }
+                        }
+                    }
+                    
+                    xcstringsContent += "\n  }\n}"
+                    
+                    // 写入文件
+                    try stringsContent.write(to: stringsURL, atomically: true, encoding: .utf8)
+                    try xcstringsContent.write(to: xcstringsURL, atomically: true, encoding: .utf8)
+                }
+                
+                // 显示成功消息
+                DispatchQueue.main.async {
+                    self.errorMessage = "Localization files generated successfully at: \(baseURL.path)"
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Failed to generate localization files: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
 } 
