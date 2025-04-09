@@ -2,12 +2,14 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = ScannerViewModel()
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     
     var body: some View {
         NavigationView {
             SidebarView(viewModel: viewModel)
             ResultsView(viewModel: viewModel)
         }
+        .preferredColorScheme(isDarkMode ? .dark : .light)
     }
 }
 
@@ -21,14 +23,14 @@ struct SidebarView: View {
                     .font(.title)
                     .fontWeight(.bold)
                 
-                Text("Select a project folder to scan for strings")
+                Text("Select a project folder to scan for strings".localized)
                     .foregroundColor(.secondary)
             }
             .padding()
             
             VStack(spacing: 15) {
                 Button(action: viewModel.selectFolder) {
-                    Label("Select Folder", systemImage: "folder")
+                    Label("Select Folder".localized, systemImage: "folder")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
@@ -47,7 +49,7 @@ struct SidebarView: View {
                             .progressViewStyle(.circular)
                             .controlSize(.small)
                     } else {
-                        Text("Start Scan")
+                        Text("Start Scan".localized)
                     }
                 }
                 .buttonStyle(.bordered)
@@ -57,7 +59,7 @@ struct SidebarView: View {
             
             if viewModel.isScanning {
                 ProgressView(value: viewModel.progress) {
-                    Text("Scanning...")
+                    Text("Scanning...".localized)
                 }
                 .padding()
             }
@@ -78,7 +80,7 @@ struct ResultsView: View {
                     Image(systemName: "doc.text.magnifyingglass")
                         .font(.system(size: 48))
                         .foregroundColor(.secondary)
-                    Text("No Results")
+                    Text("No Results".localized)
                         .font(.title2)
                         .fontWeight(.medium)
                     Text("Select a folder and start scanning to find strings")
@@ -90,12 +92,12 @@ struct ResultsView: View {
                     HStack {
                         Spacer()
                         Button(action: viewModel.exportToJSON) {
-                            Label("Export JSON", systemImage: "square.and.arrow.down")
+                            Label("Export JSON".localized, systemImage: "square.and.arrow.down")
                         }
                         .buttonStyle(.bordered)
                         
                         Button(action: viewModel.exportToCSV) {
-                            Label("Export CSV", systemImage: "tablecells")
+                            Label("Export CSV".localized, systemImage: "tablecells")
                         }
                         .buttonStyle(.bordered)
                     }
@@ -116,7 +118,7 @@ struct ResultsView: View {
                                     .foregroundColor(.secondary)
                                 
                                 if result.isLocalized {
-                                    Text("Localized")
+                                    Text("Localized".localized)
                                         .font(.caption)
                                         .foregroundColor(.blue)
                                 }

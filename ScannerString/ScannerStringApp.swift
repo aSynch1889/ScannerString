@@ -10,22 +10,23 @@ import SwiftUI
 @main
 struct ScannerStringApp: App {
     init() {
+        // 读取保存的语言设置
         if let savedLanguage = UserDefaults.standard.string(forKey: "appLanguage") {
-            UserDefaults.standard.set([savedLanguage], forKey: "AppleLanguages")
+            LocalizationManager.shared.setLanguage(savedLanguage)
         } else {
+            // 默认设置为英语
             UserDefaults.standard.set("en", forKey: "appLanguage")
-            UserDefaults.standard.set(["en"], forKey: "AppleLanguages")
+            LocalizationManager.shared.setLanguage("en")
         }
-        UserDefaults.standard.synchronize()
     }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
+                    // 当语言改变时，更新本地化管理器
                     if let language = UserDefaults.standard.string(forKey: "appLanguage") {
-                        UserDefaults.standard.set([language], forKey: "AppleLanguages")
-                        UserDefaults.standard.synchronize()
+                        LocalizationManager.shared.setLanguage(language)
                     }
                 }
         }

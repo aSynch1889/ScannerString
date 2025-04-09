@@ -16,8 +16,8 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section(header: Text(NSLocalizedString("settings.language", comment: ""))) {
-                Picker(NSLocalizedString("settings.language", comment: ""), selection: $appLanguage) {
+            Section(header: Text("settings.language".localized)) {
+                Picker("settings.language".localized, selection: $appLanguage) {
                     ForEach(supportedLanguages, id: \.0) { code, nativeName in
                         Text(nativeName).tag(code)
                     }
@@ -30,8 +30,8 @@ struct SettingsView: View {
                 }
             }
             
-            Section(header: Text(NSLocalizedString("settings.appearance", comment: ""))) {
-                Toggle(NSLocalizedString("settings.appearance.dark", comment: ""), isOn: $isDarkMode)
+            Section(header: Text("settings.appearance".localized)) {
+                Toggle("settings.appearance.dark".localized, isOn: $isDarkMode)
             }
         }
         .formStyle(.grouped)
