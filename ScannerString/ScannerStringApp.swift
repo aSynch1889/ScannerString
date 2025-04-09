@@ -9,11 +9,26 @@ import SwiftUI
 
 @main
 struct ScannerStringApp: App {
+    @StateObject private var settingsManager = SettingsManager.shared
+    @State private var showingSettings = false
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 800, minHeight: 600)
+                .preferredColorScheme(settingsManager.colorScheme)
+                .environment(\.locale, Locale(identifier: settingsManager.language.rawValue))
+                .sheet(isPresented: $showingSettings) {
+                    SettingsView()
+                }
         }
         .windowStyle(.hiddenTitleBar)
+        .commands {
+            CommandGroup(replacing: .appSettings) {
+                Button(NSLocalizedString("settings.title", comment: "")) {
+                    showingSettings.toggle()
+                }
+                .keyboardShortcut(",", modifiers: .command)
+            }
+        }
     }
 }

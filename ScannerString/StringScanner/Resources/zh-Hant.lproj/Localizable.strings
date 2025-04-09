@@ -1,0 +1,10 @@
+"settings.title" = "設定";
+"settings.appearance" = "外觀";
+"settings.appearance.light" = "淺色";
+"settings.appearance.dark" = "深色";
+"settings.appearance.system" = "跟隨系統";
+"settings.language" = "語言";
+"settings.language.english" = "英語";
+"settings.language.simplified_chinese" = "簡體中文";
+"settings.language.traditional_chinese" = "繁體中文";
+"settings.language.japanese" = "日語"; 

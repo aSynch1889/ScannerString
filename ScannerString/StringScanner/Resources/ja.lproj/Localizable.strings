@@ -1,0 +1,10 @@
+"settings.title" = "設定";
+"settings.appearance" = "外観";
+"settings.appearance.light" = "ライト";
+"settings.appearance.dark" = "ダーク";
+"settings.appearance.system" = "システムに従う";
+"settings.language" = "言語";
+"settings.language.english" = "英語";
+"settings.language.simplified_chinese" = "簡体字中国語";
+"settings.language.traditional_chinese" = "繁体字中国語";
+"settings.language.japanese" = "日本語"; 

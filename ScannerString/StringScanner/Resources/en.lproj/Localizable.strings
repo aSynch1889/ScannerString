@@ -1,0 +1,10 @@
+"settings.title" = "Settings";
+"settings.appearance" = "Appearance";
+"settings.appearance.light" = "Light";
+"settings.appearance.dark" = "Dark";
+"settings.appearance.system" = "System";
+"settings.language" = "Language";
+"settings.language.english" = "English";
+"settings.language.simplified_chinese" = "Simplified Chinese";
+"settings.language.traditional_chinese" = "Traditional Chinese";
+"settings.language.japanese" = "Japanese"; 
