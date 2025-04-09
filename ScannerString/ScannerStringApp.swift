@@ -9,26 +9,31 @@ import SwiftUI
 
 @main
 struct ScannerStringApp: App {
-    @StateObject private var settingsManager = SettingsManager.shared
-    @State private var showingSettings = false
-    
+    init() {
+        if let savedLanguage = UserDefaults.standard.string(forKey: "appLanguage") {
+            UserDefaults.standard.set([savedLanguage], forKey: "AppleLanguages")
+        } else {
+            UserDefaults.standard.set("en", forKey: "appLanguage")
+            UserDefaults.standard.set(["en"], forKey: "AppleLanguages")
+        }
+        UserDefaults.standard.synchronize()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(settingsManager.colorScheme)
-                .environment(\.locale, Locale(identifier: settingsManager.language.rawValue))
-                .sheet(isPresented: $showingSettings) {
-                    SettingsView()
+                .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
+                    if let language = UserDefaults.standard.string(forKey: "appLanguage") {
+                        UserDefaults.standard.set([language], forKey: "AppleLanguages")
+                        UserDefaults.standard.synchronize()
+                    }
                 }
         }
         .windowStyle(.hiddenTitleBar)
-        .commands {
-            CommandGroup(replacing: .appSettings) {
-                Button(NSLocalizedString("settings.title", comment: "")) {
-                    showingSettings.toggle()
-                }
-                .keyboardShortcut(",", modifiers: .command)
-            }
+        .defaultSize(width: 800, height: 600)
+        
+        Settings {
+            SettingsView()
         }
     }
 }
