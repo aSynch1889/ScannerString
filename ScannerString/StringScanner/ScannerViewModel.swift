@@ -219,17 +219,21 @@ class ScannerViewModel: ObservableObject {
                     var stringsContent = ""
                     
                     // 只处理标记为本地化的字符串
-                    let localizedStrings = results.filter { $0.isLocalized }
+//                    let localizedStrings = results.filter { $0.isLocalized }
                     
-                    for result in localizedStrings {
+                    for result in results {
                         // 转义字符串中的特殊字符
                         let escapedContent = result.content
                             .replacingOccurrences(of: "\"", with: "\\\"")
                             .replacingOccurrences(of: "\n", with: "\\n")
                         
-                        // 添加注释，显示原始位置
-                        stringsContent += "/* \(result.file):\(result.line) */\n"
-                        stringsContent += "\"\(escapedContent)\" = \"\(escapedContent)\";\n\n"
+                        // 使用字符串内容作为 key 和值
+                        stringsContent += "\"\(escapedContent)\" = \"\(escapedContent)\";\n"
+                    }
+                    
+                    // 确保文件不为空
+                    if stringsContent.isEmpty {
+                        stringsContent = "/* No localized strings found */\n"
                     }
                     
                     // 写入文件
