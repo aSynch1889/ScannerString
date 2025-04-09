@@ -10,6 +10,7 @@ class ScannerViewModel: ObservableObject {
     @Published var results: [StringLocation] = []
     @Published var selectedPath: String = ""
     @Published var errorMessage: String?
+    @Published var languageChanged = false
     
     private let scanner = ProjectScanner()
     private let fileManager = FileManager.default

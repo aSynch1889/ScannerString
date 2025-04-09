@@ -67,6 +67,10 @@ struct SidebarView: View {
             Spacer()
         }
         .frame(minWidth: 250)
+        .id(viewModel.languageChanged)
+        .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
+            viewModel.languageChanged.toggle()
+        }
     }
 }
 
