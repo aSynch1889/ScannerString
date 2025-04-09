@@ -19,7 +19,7 @@ struct SidebarView: View {
     var body: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 10) {
-                Text("String Scanner")
+                Text("String Scanner".localized)
                     .font(.title)
                     .fontWeight(.bold)
                 
