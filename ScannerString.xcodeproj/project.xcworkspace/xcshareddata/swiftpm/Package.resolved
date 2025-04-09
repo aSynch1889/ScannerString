@@ -1,0 +1,15 @@
+{
+  "originHash" : "0d9f9797b4518f2fa63ec11b90837bdb31ee25fae12d5de23d80db32c54f6fc1",
+  "pins" : [
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://gitee.com/dingjiarui/swift-syntax.git",
+      "state" : {
+        "revision" : "303e5c5c36d6a558407d364878df131c3546fad8",
+        "version" : "510.0.2"
+      }
+    }
+  ],
+  "version" : 3
+}
