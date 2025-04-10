@@ -18,9 +18,9 @@ struct SidebarView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 16) {
+            VStack(spacing: 12) {
                 // 标题
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text("String Scanner".localized)
                         .font(.title2)
                         .fontWeight(.bold)
@@ -33,16 +33,17 @@ struct SidebarView: View {
                 
                 // 扫描控制卡片
                 CardView(title: "扫描控制".localized, icon: "magnifyingglass") {
-                    VStack(spacing: 12) {
+                    VStack(spacing: 8) {
                         Button(action: viewModel.selectFolder) {
                             HStack {
                                 Image(systemName: "folder")
                                 Text("选择文件夹".localized)
                                 Spacer()
                             }
-                            .padding()
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
                             .background(Color.secondary.opacity(0.1))
-                            .cornerRadius(8)
+                            .cornerRadius(6)
                         }
                         .buttonStyle(.plain)
                         
@@ -52,10 +53,11 @@ struct SidebarView: View {
                                 Text("开始扫描".localized)
                                 Spacer()
                             }
-                            .padding()
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
                             .background(viewModel.selectedPath.isEmpty ? Color.secondary.opacity(0.1) : Color.blue.opacity(0.1))
                             .foregroundColor(viewModel.selectedPath.isEmpty ? .secondary : .blue)
-                            .cornerRadius(8)
+                            .cornerRadius(6)
                         }
                         .buttonStyle(.plain)
                         .disabled(viewModel.selectedPath.isEmpty)
@@ -70,7 +72,7 @@ struct SidebarView: View {
                 
                 // 扫描统计卡片
                 CardView(title: "扫描统计".localized, icon: "chart.bar") {
-                    VStack(spacing: 12) {
+                    VStack(spacing: 8) {
                         StatItem(icon: "text.quote", title: "字符串数量".localized, value: "\(viewModel.results.count)")
                         StatItem(icon: "doc.text", title: "文件数量".localized, value: "\(Set(viewModel.results.map { $0.file }).count)")
                     }
@@ -78,7 +80,7 @@ struct SidebarView: View {
                 
                 // 导出选项卡片
                 CardView(title: "导出选项".localized, icon: "square.and.arrow.down") {
-                    VStack(spacing: 12) {
+                    VStack(spacing: 8) {
                         ExportButton(title: "导出为 JSON".localized, icon: "doc.text", action: viewModel.exportToJSON, isDisabled: viewModel.results.isEmpty)
                         ExportButton(title: "导出为 CSV".localized, icon: "tablecells", action: viewModel.exportToCSV, isDisabled: viewModel.results.isEmpty)
                         ExportButton(title: "导出本地化文件".localized, icon: "globe", action: viewModel.exportToLocalizationFiles, isDisabled: viewModel.results.isEmpty)
@@ -98,15 +100,17 @@ struct SidebarView: View {
                                 .truncationMode(.middle)
                             Spacer()
                         }
-                        .padding()
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
                         .background(Color.secondary.opacity(0.1))
-                        .cornerRadius(8)
+                        .cornerRadius(6)
                     }
                 }
             }
-            .padding()
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
         }
-        .frame(minWidth: 280)
+        .frame(minWidth: 260)
         .id(viewModel.languageChanged)
         .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
             viewModel.languageChanged.toggle()
@@ -127,20 +131,22 @@ struct CardView<Content: View>: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Image(systemName: icon)
                     .foregroundColor(.blue)
+                    .font(.system(size: 14))
                 Text(title)
                     .font(.headline)
+                    .font(.system(size: 14))
             }
             
             content
         }
-        .padding()
+        .padding(10)
         .background(Color(.windowBackgroundColor))
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .cornerRadius(8)
+        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 1)
     }
 }
 
@@ -154,14 +160,18 @@ struct StatItem: View {
         HStack {
             Image(systemName: icon)
                 .foregroundColor(.blue)
+                .font(.system(size: 14))
             Text(title)
+                .font(.system(size: 14))
             Spacer()
             Text(value)
                 .foregroundColor(.secondary)
+                .font(.system(size: 14))
         }
-        .padding()
+        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
         .background(Color.secondary.opacity(0.1))
-        .cornerRadius(8)
+        .cornerRadius(6)
     }
 }
 
@@ -176,13 +186,16 @@ struct ExportButton: View {
         Button(action: action) {
             HStack {
                 Image(systemName: icon)
+                    .font(.system(size: 14))
                 Text(title)
+                    .font(.system(size: 14))
                 Spacer()
             }
-            .padding()
+            .padding(.vertical, 6)
+            .padding(.horizontal, 10)
             .background(isDisabled ? Color.secondary.opacity(0.1) : Color.blue.opacity(0.1))
             .foregroundColor(isDisabled ? .secondary : .blue)
-            .cornerRadius(8)
+            .cornerRadius(6)
         }
         .buttonStyle(.plain)
         .disabled(isDisabled)
