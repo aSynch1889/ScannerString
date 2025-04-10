@@ -87,7 +87,7 @@ struct ResultsView: View {
                     Text("No Results".localized)
                         .font(.title2)
                         .fontWeight(.medium)
-                    Text("Select a folder and start scanning to find strings")
+                    Text("Select a project folder to scan for strings".localized)
                         .foregroundColor(.secondary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
