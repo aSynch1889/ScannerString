@@ -207,38 +207,31 @@ class ScannerViewModel: ObservableObject {
                 let baseURL = outputURL.appendingPathComponent("Localization")
                 try FileManager.default.createDirectory(at: baseURL, withIntermediateDirectories: true)
                 
-                // 支持的本地化语言
-                let languages = ["en", "zh-Hans", "zh-Hant", "ja"]
+                // 只生成当前语言的文件
+                let languageURL = baseURL.appendingPathComponent("en.lproj")
+                try FileManager.default.createDirectory(at: languageURL, withIntermediateDirectories: true)
                 
-                for language in languages {
-                    let languageURL = baseURL.appendingPathComponent("\(language).lproj")
-                    try FileManager.default.createDirectory(at: languageURL, withIntermediateDirectories: true)
+                // 生成 .strings 文件
+                let stringsURL = languageURL.appendingPathComponent("Localizable.strings")
+                var stringsContent = ""
+                
+                for result in results {
+                    // 转义字符串中的特殊字符
+                    let escapedContent = result.content
+                        .replacingOccurrences(of: "\"", with: "\\\"")
+                        .replacingOccurrences(of: "\n", with: "\\n")
                     
-                    // 生成 .strings 文件
-                    let stringsURL = languageURL.appendingPathComponent("Localizable.strings")
-                    var stringsContent = ""
-                    
-                    // 只处理标记为本地化的字符串
-//                    let localizedStrings = results.filter { $0.isLocalized }
-                    
-                    for result in results {
-                        // 转义字符串中的特殊字符
-                        let escapedContent = result.content
-                            .replacingOccurrences(of: "\"", with: "\\\"")
-                            .replacingOccurrences(of: "\n", with: "\\n")
-                        
-                        // 使用字符串内容作为 key 和值
-                        stringsContent += "\"\(escapedContent)\" = \"\(escapedContent)\";\n"
-                    }
-                    
-                    // 确保文件不为空
-                    if stringsContent.isEmpty {
-                        stringsContent = "/* No localized strings found */\n"
-                    }
-                    
-                    // 写入文件
-                    try stringsContent.write(to: stringsURL, atomically: true, encoding: .utf8)
+                    // 使用字符串内容作为 key 和值
+                    stringsContent += "\"\(escapedContent)\" = \"\(escapedContent)\";\n"
                 }
+                
+                // 确保文件不为空
+                if stringsContent.isEmpty {
+                    stringsContent = "/* No localized strings found */\n"
+                }
+                
+                // 写入文件
+                try stringsContent.write(to: stringsURL, atomically: true, encoding: .utf8)
                 
                 // 显示成功消息
                 DispatchQueue.main.async {
@@ -266,12 +259,6 @@ class ScannerViewModel: ObservableObject {
             guard let outputURL = savePanel.url else { return }
             
             do {
-                // 支持的本地化语言
-                let languages = ["en", "zh-Hans", "zh-Hant", "ja"]
-                
-                // 只处理标记为本地化的字符串
-//                let localizedStrings = results.filter { $0.isLocalized }
-                
                 var xcstringsContent = """
                 {
                   "sourceLanguage" : "en",
@@ -289,23 +276,12 @@ class ScannerViewModel: ObservableObject {
                         "\(escapedContent)" : {
                           "extractionState" : "manual",
                           "localizations" : {
-                    """
-                    
-                    // 为每种语言添加相同的值（后续可以手动翻译）
-                    for (langIndex, language) in languages.enumerated() {
-                        xcstringsContent += """
-                        
-                            "\(language)" : {
+                            "en" : {
                               "stringUnit" : {
                                 "state" : "translated",
                                 "value" : "\(escapedContent)"
                               }
-                            }\(langIndex < languages.count - 1 ? "," : "")
-                        """
-                    }
-                    
-                    xcstringsContent += """
-                        
+                            }
                           }
                         }\(index < results.count - 1 ? "," : "")
                     """
