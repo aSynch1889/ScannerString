@@ -17,55 +17,88 @@ struct SidebarView: View {
     @ObservedObject var viewModel: ScannerViewModel
     
     var body: some View {
-        VStack(spacing: 20) {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("String Scanner".localized)
-                    .font(.title)
-                    .fontWeight(.bold)
-                
-                Text("Select a project folder to scan for strings".localized)
-                    .foregroundColor(.secondary)
-            }
-            .padding()
-            
-            VStack(spacing: 15) {
+        List {
+            // 扫描控制部分
+            Section(header: Text("扫描控制").font(.headline)) {
                 Button(action: viewModel.selectFolder) {
-                    Label("Select Folder".localized, systemImage: "folder")
-                        .frame(maxWidth: .infinity)
+                    Label("选择文件夹", systemImage: "folder")
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(viewModel.isScanning)
-                
-                Text(viewModel.selectedPath)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .padding(.horizontal)
+                .buttonStyle(.plain)
                 
                 Button(action: viewModel.startScan) {
-                    if viewModel.isScanning {
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                            .controlSize(.small)
-                    } else {
-                        Text("Start Scan".localized)
+                    Label("开始扫描", systemImage: "magnifyingglass")
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.selectedPath.isEmpty)
+                
+                if viewModel.isScanning {
+                    ProgressView(value: viewModel.progress)
+                        .progressViewStyle(.linear)
+                }
+            }
+            
+            // 扫描结果统计
+            Section(header: Text("扫描统计").font(.headline)) {
+                HStack {
+                    Image(systemName: "text.quote")
+                    Text("字符串数量")
+                    Spacer()
+                    Text("\(viewModel.results.count)")
+                        .foregroundColor(.secondary)
+                }
+                
+                HStack {
+                    Image(systemName: "doc.text")
+                    Text("文件数量")
+                    Spacer()
+                    Text("\(Set(viewModel.results.map { $0.file }).count)")
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+            // 导出选项
+            Section(header: Text("导出选项").font(.headline)) {
+                Button(action: viewModel.exportToJSON) {
+                    Label("导出为 JSON", systemImage: "doc.text")
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.results.isEmpty)
+                
+                Button(action: viewModel.exportToCSV) {
+                    Label("导出为 CSV", systemImage: "tablecells")
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.results.isEmpty)
+                
+                Button(action: viewModel.exportToLocalizationFiles) {
+                    Label("导出本地化文件", systemImage: "globe")
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.results.isEmpty)
+                
+                Button(action: viewModel.exportToXCStrings) {
+                    Label("导出 XCStrings", systemImage: "doc.text.fill")
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.results.isEmpty)
+            }
+            
+            // 项目信息
+            Section(header: Text("项目信息").font(.headline)) {
+                if !viewModel.selectedPath.isEmpty {
+                    HStack {
+                        Image(systemName: "folder.fill")
+                        Text("当前项目")
+                        Spacer()
+                        Text(viewModel.selectedPath)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
                     }
                 }
-                .buttonStyle(.bordered)
-                .disabled(viewModel.selectedPath.isEmpty || viewModel.isScanning)
             }
-            .padding()
-            
-            if viewModel.isScanning {
-                ProgressView(value: viewModel.progress) {
-                    Text("Scanning...".localized)
-                }
-                .padding()
-            }
-            
-            Spacer()
         }
+        .listStyle(.sidebar)
         .frame(minWidth: 250)
         .id(viewModel.languageChanged)
         .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
