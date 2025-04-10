@@ -34,18 +34,59 @@ struct SidebarView: View {
                 // 扫描控制卡片
                 CardView(title: "扫描控制".localized, icon: "magnifyingglass") {
                     VStack(spacing: 8) {
-                        Button(action: viewModel.selectFolder) {
-                            HStack {
-                                Image(systemName: "folder")
-                                Text("选择文件夹".localized)
-                                Spacer()
+                        // 合并的选择区域
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.secondary.opacity(0.1))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [5]))
+                                )
+                            
+                            if viewModel.selectedPath.isEmpty {
+                                VStack(spacing: 8) {
+                                    Image(systemName: "folder.badge.plus")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.blue)
+                                    Text("点击或拖拽文件夹到此处".localized)
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.vertical, 16)
+                            } else {
+                                VStack(spacing: 8) {
+                                    Image(systemName: "folder.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.blue)
+                                    Text(URL(fileURLWithPath: viewModel.selectedPath).lastPathComponent)
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.primary)
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                    Text(viewModel.selectedPath)
+                                        .font(.system(size: 10))
+                                        .foregroundColor(.secondary)
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                }
+                                .padding(.vertical, 16)
                             }
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 12)
-                            .background(Color.secondary.opacity(0.1))
-                            .cornerRadius(6)
                         }
-                        .buttonStyle(.plain)
+                        .onTapGesture {
+                            viewModel.selectFolder()
+                        }
+                        .onDrop(of: [.fileURL], isTargeted: nil) { providers -> Bool in
+                            providers.first?.loadDataRepresentation(forTypeIdentifier: "public.file-url", completionHandler: { data, error in
+                                if let data = data,
+                                   let path = String(data: data, encoding: .utf8),
+                                   let url = URL(string: path) {
+                                    DispatchQueue.main.async {
+                                        viewModel.handleDroppedFolder(url)
+                                    }
+                                }
+                            })
+                            return true
+                        }
                         
                         Button(action: viewModel.startScan) {
                             HStack {

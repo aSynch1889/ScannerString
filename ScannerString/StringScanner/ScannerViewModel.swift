@@ -30,6 +30,16 @@ class ScannerViewModel: ObservableObject {
         }
     }
     
+    func handleDroppedFolder(_ url: URL) {
+        // 检查是否是文件夹
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory) && isDirectory.boolValue {
+            selectedPath = url.path
+        } else {
+            errorMessage = "请拖拽文件夹而不是文件".localized
+        }
+    }
+    
     func startScan() {
         guard !selectedPath.isEmpty else {
             errorMessage = "Please select a folder first"
