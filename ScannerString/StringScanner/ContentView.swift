@@ -2,14 +2,26 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = ScannerViewModel()
-    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    @State private var isSidebarVisible = true
     
     var body: some View {
-        NavigationView {
+        NavigationSplitView {
             SidebarView(viewModel: viewModel)
+                .toolbar {
+                    ToolbarItem(placement: .navigation) {
+                        Button(action: {
+                            isSidebarVisible.toggle()
+                        }) {
+                            Image(systemName: "sidebar.left")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+        } detail: {
             ResultsView(viewModel: viewModel)
         }
-        .preferredColorScheme(isDarkMode ? .dark : .light)
+        .navigationSplitViewStyle(.balanced)
+        .frame(minWidth: 800, minHeight: 600)
     }
 }
 
@@ -130,23 +142,23 @@ struct SidebarView: View {
                 }
                 
                 // 项目信息卡片
-//                if !viewModel.selectedPath.isEmpty {
-//                    CardView(title: "项目信息".localized, icon: "folder.fill") {
-//                        HStack {
-//                            Image(systemName: "folder.fill")
-//                                .foregroundColor(.blue)
-//                            Text(viewModel.selectedPath)
-//                                .foregroundColor(.secondary)
-//                                .lineLimit(1)
-//                                .truncationMode(.middle)
-//                            Spacer()
-//                        }
-//                        .padding(.vertical, 8)
-//                        .padding(.horizontal, 12)
-//                        .background(Color.secondary.opacity(0.1))
-//                        .cornerRadius(6)
-//                    }
-//                }
+                if !viewModel.selectedPath.isEmpty {
+                    CardView(title: "项目信息".localized, icon: "folder.fill") {
+                        HStack {
+                            Image(systemName: "folder.fill")
+                                .foregroundColor(.blue)
+                            Text(viewModel.selectedPath)
+                                .foregroundColor(.secondary)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                            Spacer()
+                        }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .background(Color.secondary.opacity(0.1))
+                        .cornerRadius(6)
+                    }
+                }
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
