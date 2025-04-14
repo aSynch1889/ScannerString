@@ -116,9 +116,31 @@ struct SidebarView: View {
                         .disabled(viewModel.selectedPath.isEmpty)
                         
                         if viewModel.isScanning {
-                            ProgressView(value: viewModel.progress)
-                                .progressViewStyle(.linear)
-                                .tint(.blue)
+                            VStack(spacing: 8) {
+                                ProgressView(value: viewModel.progress)
+                                    .progressViewStyle(.linear)
+                                    .tint(.blue)
+                                
+                                HStack {
+                                    Text("\(viewModel.processedFiles)/\(viewModel.totalFiles) 文件".localized)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    
+                                    Spacer()
+                                    
+                                    Text("\(Int(viewModel.progress * 100))%")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                if !viewModel.currentFile.isEmpty {
+                                    Text("正在扫描: \(viewModel.currentFile)".localized)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                }
+                            }
                         }
                     }
                 }

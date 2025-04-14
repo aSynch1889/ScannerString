@@ -11,6 +11,9 @@ class ScannerViewModel: ObservableObject {
     @Published var selectedPath: String = ""
     @Published var errorMessage: String?
     @Published var languageChanged = false
+    @Published var currentFile: String = ""
+    @Published var processedFiles: Int = 0
+    @Published var totalFiles: Int = 0
     
     private let scanner = ProjectScanner()
     private let fileManager = FileManager.default
@@ -50,6 +53,9 @@ class ScannerViewModel: ObservableObject {
         progress = 0
         results = []
         allStrings = []
+        currentFile = ""
+        processedFiles = 0
+        totalFiles = 0
         
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.scanProject(at: self?.selectedPath ?? "")
@@ -72,11 +78,16 @@ class ScannerViewModel: ObservableObject {
         let files = enumerator.compactMap { $0 as? URL }
             .filter { isValidFile($0) }
         
-        let totalFiles = files.count
-        var processedFiles = 0
+        DispatchQueue.main.async {
+            self.totalFiles = files.count
+        }
         
         DispatchQueue.concurrentPerform(iterations: files.count) { index in
             let file = files[index]
+            DispatchQueue.main.async {
+                self.currentFile = file.lastPathComponent
+            }
+            
             do {
                 try self.scanFile(at: file)
             } catch {
@@ -85,15 +96,16 @@ class ScannerViewModel: ObservableObject {
                 }
             }
             
-            processedFiles += 1
             DispatchQueue.main.async {
-                self.progress = Double(processedFiles) / Double(totalFiles)
+                self.processedFiles += 1
+                self.progress = Double(self.processedFiles) / Double(self.totalFiles)
             }
         }
         
         DispatchQueue.main.async {
             self.outputResults()
             self.isScanning = false
+            self.currentFile = ""
         }
     }
     
