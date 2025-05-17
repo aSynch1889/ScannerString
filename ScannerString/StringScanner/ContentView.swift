@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var viewModel = ScannerViewModel()
     @State private var isSidebarVisible = true
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     
     var body: some View {
         NavigationSplitView {
@@ -22,6 +23,7 @@ struct ContentView: View {
         }
         .navigationSplitViewStyle(.balanced)
         .frame(minWidth: 800, minHeight: 600)
+        .preferredColorScheme(isDarkMode ? .dark : .light)
     }
 }
 
