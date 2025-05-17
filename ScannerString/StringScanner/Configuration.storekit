@@ -1,0 +1,153 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "com.scannerstring.subscription",
+  "nonRenewingSubscriptions" : [
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "groupNumber" : 1,
+      "internalID" : "com.scannerstring.subscription.unlimited",
+      "introductoryOffer" : null,
+      "localizations" : [
+        {
+          "description" : "Unlock unlimited scans per day",
+          "displayName" : "Unlimited Scan Subscription",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "解锁每日无限次扫描",
+          "displayName" : "无限扫描订阅",
+          "locale" : "zh_CN"
+        }
+      ],
+      "productID" : "com.scannerstring.subscription.unlimited",
+      "referenceName" : "Unlimited Scan Subscription",
+      "subscriptionGroupID" : "group1",
+      "type" : "NonRenewingSubscription"
+    }
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "com.scannerstring",
+    "_developerTeamID" : "YOUR_TEAM_ID",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 711123456.78912306,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "group1",
+      "localizations" : [
+        {
+          "description" : "Unlimited scan subscription group",
+          "displayName" : "Unlimited Scan",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "无限扫描订阅组",
+          "displayName" : "无限扫描",
+          "locale" : "zh_CN"
+        }
+      ],
+      "name" : "Unlimited Scan",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "5BB31B1D",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlock unlimited scans per day",
+              "displayName" : "Unlimited Scan Subscription",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "解锁每日无限次扫描",
+              "displayName" : "无限扫描订阅",
+              "locale" : "zh_CN"
+            }
+          ],
+          "productID" : "com.scannerstring.subscription.unlimited",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Unlimited Scan Subscription",
+          "subscriptionGroupID" : "group1",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

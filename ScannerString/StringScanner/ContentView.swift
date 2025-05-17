@@ -2,7 +2,10 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = ScannerViewModel()
+    @StateObject private var storeManager = StoreManager.shared
+    @StateObject private var usageManager = UsageManager.shared
     @State private var isSidebarVisible = true
+    @State private var showingSubscriptionSheet = false
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     
     var body: some View {
@@ -17,6 +20,15 @@ struct ContentView: View {
                                 .foregroundColor(.blue)
                         }
                     }
+                    
+                    ToolbarItem(placement: .primaryAction) {
+                        Button(action: {
+                            showingSubscriptionSheet = true
+                        }) {
+                            Image(systemName: storeManager.hasUnlimitedSubscription ? "crown.fill" : "crown")
+                                .foregroundColor(storeManager.hasUnlimitedSubscription ? .yellow : .blue)
+                        }
+                    }
                 }
         } detail: {
             ResultsView(viewModel: viewModel)
@@ -24,11 +36,110 @@ struct ContentView: View {
         .navigationSplitViewStyle(.balanced)
         .frame(minWidth: 800, minHeight: 600)
         .preferredColorScheme(isDarkMode ? .dark : .light)
+        .sheet(isPresented: $showingSubscriptionSheet) {
+            SubscriptionView()
+        }
+    }
+}
+
+struct SubscriptionView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var storeManager = StoreManager.shared
+    @State private var isPurchasing = false
+    @State private var errorMessage: String?
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                Image(systemName: "crown.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.yellow)
+                
+                Text("Unlimited Scan Subscription".localized)
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                Text("Get unlimited scans every day".localized)
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                
+                if let product = storeManager.products.first {
+                    VStack(spacing: 8) {
+                        Text(product.displayPrice)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        
+                        Text("One-time purchase".localized)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding()
+                    .background(Color.secondary.opacity(0.1))
+                    .cornerRadius(10)
+                }
+                
+                if let error = errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                }
+                
+                Button(action: {
+                    Task {
+                        await purchaseSubscription()
+                    }
+                }) {
+                    if isPurchasing {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                    } else {
+                        Text("Purchase".localized)
+                            .fontWeight(.semibold)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(isPurchasing || storeManager.hasUnlimitedSubscription)
+                
+                if storeManager.hasUnlimitedSubscription {
+                    Text("You have unlimited scans!".localized)
+                        .foregroundColor(.green)
+                        .font(.headline)
+                }
+            }
+            .padding()
+            .frame(width: 400)
+            .navigationTitle("Subscription".localized)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close".localized) {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func purchaseSubscription() async {
+        guard let product = storeManager.products.first else { return }
+        
+        isPurchasing = true
+        errorMessage = nil
+        
+        do {
+            try await storeManager.purchase(product)
+        } catch StoreError.userCancelled {
+            errorMessage = "Purchase cancelled".localized
+        } catch {
+            errorMessage = "Purchase failed: \(error.localizedDescription)".localized
+        }
+        
+        isPurchasing = false
     }
 }
 
 struct SidebarView: View {
     @ObservedObject var viewModel: ScannerViewModel
+    @ObservedObject var usageManager = UsageManager.shared
     
     var body: some View {
         ScrollView {
@@ -102,20 +213,30 @@ struct SidebarView: View {
                             return true
                         }
                         
-                        Button(action: viewModel.startScan) {
+                        Button(action: {
+                            if usageManager.canPerformScan() {
+                                viewModel.startScan()
+                                usageManager.recordScan()
+                            }
+                        }) {
                             HStack {
                                 Image(systemName: "play.fill")
                                 Text("开始扫描".localized)
                                 Spacer()
+                                if !usageManager.canPerformScan() {
+                                    Text("\(usageManager.remainingScansToday()) 次剩余".localized)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
-                            .background(viewModel.selectedPath.isEmpty ? Color.secondary.opacity(0.1) : Color.blue.opacity(0.1))
-                            .foregroundColor(viewModel.selectedPath.isEmpty ? .secondary : .blue)
+                            .background(usageManager.canPerformScan() ? Color.blue.opacity(0.1) : Color.secondary.opacity(0.1))
+                            .foregroundColor(usageManager.canPerformScan() ? .blue : .secondary)
                             .cornerRadius(6)
                         }
                         .buttonStyle(.plain)
-                        .disabled(viewModel.selectedPath.isEmpty)
+                        .disabled(!usageManager.canPerformScan())
                         
                         if viewModel.isScanning {
                             VStack(spacing: 8) {
