@@ -85,7 +85,7 @@ struct SubscriptionView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(storeManager.hasUnlimitedSubscription ? Color.green : Color.blue)
+                        .background(storeManager.hasUnlimitedSubscription ? Color.accentColor : Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(12)
                     }
@@ -96,7 +96,7 @@ struct SubscriptionView: View {
                     // 已购买状态
                     if storeManager.hasUnlimitedSubscription {
                         Text("You have unlimited scans!".localized)
-                            .foregroundColor(.green)
+                            .foregroundColor(.accentColor)
                             .font(.headline)
                     }
                     
