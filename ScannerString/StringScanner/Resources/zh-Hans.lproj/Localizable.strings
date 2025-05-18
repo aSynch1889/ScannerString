@@ -85,3 +85,14 @@
 "简体中文" = "简体中文";
 "繁體中文" = "繁體中文";
 "请拖拽文件夹而不是文件" = "请拖拽文件夹而非文件";
+
+// Subscription View
+"Subscription" = "订阅";
+"Unlimited Scan Subscription" = "无限扫描订阅";
+"Get unlimited scans every day" = "每天无限次扫描";
+"One-time purchase" = "一次性购买";
+"Purchase" = "购买";
+"You have unlimited scans!" = "您已获得无限扫描权限！";
+"Reset Purchase (Test Only)" = "重置购买（仅测试）";
+"Purchase cancelled" = "购买已取消";
+"Purchase failed: %@" = "购买失败：%@";

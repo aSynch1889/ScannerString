@@ -85,3 +85,14 @@
 "简体中文" = "简体中文";
 "繁體中文" = "繁體中文";
 "请拖拽文件夹而不是文件" = "ファイルではなくフォルダをドラッグしてください";
+
+// Subscription View
+"Subscription" = "サブスクリプション";
+"Unlimited Scan Subscription" = "無制限スキャンサブスクリプション";
+"Get unlimited scans every day" = "毎日無制限にスキャンできます";
+"One-time purchase" = "1回限りの購入";
+"Purchase" = "購入";
+"You have unlimited scans!" = "無制限スキャンが有効です！";
+"Reset Purchase (Test Only)" = "購入をリセット（テスト用）";
+"Purchase cancelled" = "購入がキャンセルされました";
+"Purchase failed: %@" = "購入に失敗しました：%@";

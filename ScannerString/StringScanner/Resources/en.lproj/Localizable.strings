@@ -82,3 +82,14 @@
 "简体中文" = "Simplified Chinese";
 "繁體中文" = "Traditional Chinese";
 "请拖拽文件夹而不是文件" = "Please drag a folder, not a file";
+
+// Subscription View
+"Subscription" = "Subscription";
+"Unlimited Scan Subscription" = "Unlimited Scan Subscription";
+"Get unlimited scans every day" = "Get unlimited scans every day";
+"One-time purchase" = "One-time purchase";
+"Purchase" = "Purchase";
+"You have unlimited scans!" = "You have unlimited scans!";
+"Reset Purchase (Test Only)" = "Reset Purchase (Test Only)";
+"Purchase cancelled" = "Purchase cancelled";
+"Purchase failed: %@" = "Purchase failed: %@";
