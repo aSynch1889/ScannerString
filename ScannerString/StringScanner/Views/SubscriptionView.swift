@@ -18,7 +18,7 @@ struct SubscriptionView: View {
                     dismiss()
                 }) {
                     Image(systemName: "xmark")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.accentColor)
                 }
                 .buttonStyle(.plain)
             }
@@ -32,7 +32,7 @@ struct SubscriptionView: View {
                     VStack(spacing: 16) {
                         Image(systemName: "crown.fill")
                             .font(.system(size: 60))
-                            .foregroundColor(.yellow)
+                            .foregroundColor(.accentColor)
                         
                         Text("Unlimited Scan Subscription".localized)
                             .font(.title)

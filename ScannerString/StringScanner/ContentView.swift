@@ -17,7 +17,7 @@ struct ContentView: View {
                             isSidebarVisible.toggle()
                         }) {
                             Image(systemName: "sidebar.left")
-                                .foregroundColor(.blue)
+                                .foregroundColor(.accentColor)
                         }
                     }
                     
@@ -26,7 +26,7 @@ struct ContentView: View {
                             showingSubscriptionSheet = true
                         }) {
                             Image(systemName: storeManager.hasUnlimitedSubscription ? "crown.fill" : "crown")
-                                .foregroundColor(storeManager.hasUnlimitedSubscription ? .yellow : .blue)
+                                .foregroundColor(storeManager.hasUnlimitedSubscription ? .yellow : .accentColor)
                         }
                     }
                 }
@@ -82,7 +82,7 @@ struct SidebarView: View {
                                 VStack(spacing: 8) {
                                     Image(systemName: "folder.badge.plus")
                                         .font(.system(size: 24))
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(.accentColor)
                                     Text("点击或拖拽文件夹到此处".localized)
                                         .font(.system(size: 12))
                                         .foregroundColor(.secondary)
@@ -92,7 +92,7 @@ struct SidebarView: View {
                                 VStack(spacing: 8) {
                                     Image(systemName: "folder.fill")
                                         .font(.system(size: 24))
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(.accentColor)
                                     Text(URL(fileURLWithPath: viewModel.selectedPath).lastPathComponent)
                                         .font(.system(size: 12))
                                         .foregroundColor(.primary)
@@ -131,7 +131,9 @@ struct SidebarView: View {
                         }) {
                             HStack {
                                 Image(systemName: "play.fill")
+                                    .foregroundColor(.accentColor)
                                 Text("开始扫描".localized)
+                                    .foregroundColor(.accentColor)
                                 Spacer()
                                 if !usageManager.canPerformScan() {
                                     Text("\(usageManager.remainingScansToday()) 次剩余".localized)
@@ -141,7 +143,7 @@ struct SidebarView: View {
                             }
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
-                            .background(usageManager.canPerformScan() ? Color.blue.opacity(0.1) : Color.secondary.opacity(0.1))
+                            .background(usageManager.canPerformScan() ? Color.accentColor.opacity(0.1) : Color.secondary.opacity(0.1))
                             .foregroundColor(usageManager.canPerformScan() ? .blue : .secondary)
                             .cornerRadius(6)
                         }
@@ -152,7 +154,7 @@ struct SidebarView: View {
                             VStack(spacing: 8) {
                                 ProgressView(value: viewModel.progress)
                                     .progressViewStyle(.linear)
-                                    .tint(.blue)
+                                    .tint(.accentColor)
                                 
                                 HStack {
                                     Text("\(viewModel.processedFiles)/\(viewModel.totalFiles) 文件".localized)
@@ -201,7 +203,7 @@ struct SidebarView: View {
                     CardView(title: "项目信息".localized, icon: "folder.fill") {
                         HStack {
                             Image(systemName: "folder.fill")
-                                .foregroundColor(.blue)
+                                .foregroundColor(.accentColor)
                             Text(viewModel.selectedPath)
                                 .foregroundColor(.secondary)
                                 .lineLimit(1)
@@ -242,7 +244,7 @@ struct CardView<Content: View>: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Image(systemName: icon)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.accentColor)
                     .font(.system(size: 14))
                 Text(title)
                     .font(.headline)
@@ -267,7 +269,7 @@ struct StatItem: View {
     var body: some View {
         HStack {
             Image(systemName: icon)
-                .foregroundColor(.blue)
+                .foregroundColor(.accentColor)
                 .font(.system(size: 14))
             Text(title)
                 .font(.system(size: 14))
@@ -301,8 +303,8 @@ struct ExportButton: View {
             }
             .padding(.vertical, 6)
             .padding(.horizontal, 10)
-            .background(isDisabled ? Color.secondary.opacity(0.1) : Color.blue.opacity(0.1))
-            .foregroundColor(isDisabled ? .secondary : .blue)
+            .background(isDisabled ? Color.accentColor.opacity(0.1) : Color.accentColor.opacity(0.1))
+            .foregroundColor(isDisabled ? .secondary : .accentColor)
             .cornerRadius(6)
         }
         .buttonStyle(.plain)
@@ -319,7 +321,7 @@ struct ResultsView: View {
                 VStack(spacing: 16) {
                     Image(systemName: "doc.text.magnifyingglass")
                         .font(.system(size: 48))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.accentColor)
                     Text("No Results".localized)
                         .font(.title2)
                         .fontWeight(.medium)
@@ -341,7 +343,7 @@ struct ResultsView: View {
                                 
                                 Text("Line \(result.line)")
                                     .font(.caption)
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(.accentColor)
                                 
                                 if result.isLocalized {
                                     Text("Localized".localized)
