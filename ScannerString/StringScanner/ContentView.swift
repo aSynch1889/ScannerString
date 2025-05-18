@@ -39,6 +39,10 @@ struct ContentView: View {
         .sheet(isPresented: $showingSubscriptionSheet) {
             SubscriptionView()
         }
+        .task {
+            // 在视图加载时启动 StoreManager
+            storeManager.start()
+        }
     }
 }
 
@@ -105,6 +109,18 @@ struct SubscriptionView: View {
                         .foregroundColor(.green)
                         .font(.headline)
                 }
+                
+                #if DEBUG
+                if storeManager.hasUnlimitedSubscription {
+                    Button("Reset Purchase (Test Only)".localized) {
+                        Task {
+                            await storeManager.resetPurchases()
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                    .foregroundColor(.red)
+                }
+                #endif
             }
             .padding()
             .frame(width: 400)
