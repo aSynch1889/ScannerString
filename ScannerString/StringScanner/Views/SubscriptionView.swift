@@ -33,7 +33,6 @@ struct SubscriptionView: View {
                         Image(systemName: "crown.fill")
                             .font(.system(size: 60))
                             .foregroundColor(.yellow)
-                            .symbolEffect(.bounce, options: .repeating)
                         
                         Text("Unlimited Scan Subscription".localized)
                             .font(.title)
@@ -90,6 +89,7 @@ struct SubscriptionView: View {
                         .foregroundColor(.white)
                         .cornerRadius(12)
                     }
+                    .buttonStyle(.plain)
                     .disabled(isPurchasing || storeManager.hasUnlimitedSubscription)
                     .padding(.horizontal)
                     
