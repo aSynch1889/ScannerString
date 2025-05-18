@@ -12,11 +12,9 @@
   "identifier" : "com.scannerstring.subscription",
   "nonRenewingSubscriptions" : [
     {
-      "displayPrice" : "9.99",
+      "displayPrice" : "3.99",
       "familyShareable" : false,
-      "groupNumber" : 1,
       "internalID" : "com.scannerstring.subscription.unlimited",
-      "introductoryOffer" : null,
       "localizations" : [
         {
           "description" : "Unlock unlimited scans per day",
@@ -27,11 +25,20 @@
           "description" : "解锁每日无限次扫描",
           "displayName" : "无限扫描订阅",
           "locale" : "zh_CN"
+        },
+        {
+          "description" : "1日あたり無制限のスキャンを解除する",
+          "displayName" : "無制限のスキャンサブスクリプション",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "解鎖每天無限制的掃描",
+          "displayName" : "無限掃描訂閱",
+          "locale" : "en_US"
         }
       ],
       "productID" : "com.scannerstring.subscription.unlimited",
       "referenceName" : "Unlimited Scan Subscription",
-      "subscriptionGroupID" : "group1",
       "type" : "NonRenewingSubscription"
     }
   ],
@@ -40,7 +47,7 @@
   ],
   "settings" : {
     "_applicationInternalID" : "com.scannerstring",
-    "_developerTeamID" : "YOUR_TEAM_ID",
+    "_developerTeamID" : "R9TC286V25",
     "_failTransactionsEnabled" : false,
     "_lastSynchronizedDate" : 711123456.78912306,
     "_locale" : "en_US",
@@ -117,7 +124,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "9.99",
+          "displayPrice" : "3.99",
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "94D284D4",

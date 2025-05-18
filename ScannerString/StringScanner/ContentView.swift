@@ -38,118 +38,12 @@ struct ContentView: View {
         .preferredColorScheme(isDarkMode ? .dark : .light)
         .sheet(isPresented: $showingSubscriptionSheet) {
             SubscriptionView()
+                .presentationDetents([.height(500)])
+                .presentationDragIndicator(.visible)
         }
         .task {
-            // 在视图加载时启动 StoreManager
             storeManager.start()
         }
-    }
-}
-
-struct SubscriptionView: View {
-    @Environment(\.dismiss) private var dismiss
-    @StateObject private var storeManager = StoreManager.shared
-    @State private var isPurchasing = false
-    @State private var errorMessage: String?
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                Image(systemName: "crown.fill")
-                    .font(.system(size: 60))
-                    .foregroundColor(.yellow)
-                
-                Text("Unlimited Scan Subscription".localized)
-                    .font(.title)
-                    .fontWeight(.bold)
-                
-                Text("Get unlimited scans every day".localized)
-                    .font(.headline)
-                    .foregroundColor(.secondary)
-                
-                if let product = storeManager.products.first {
-                    VStack(spacing: 8) {
-                        Text(product.displayPrice)
-                            .font(.title2)
-                            .fontWeight(.bold)
-                        
-                        Text("One-time purchase".localized)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding()
-                    .background(Color.secondary.opacity(0.1))
-                    .cornerRadius(10)
-                }
-                
-                if let error = errorMessage {
-                    Text(error)
-                        .foregroundColor(.red)
-                        .font(.caption)
-                }
-                
-                Button(action: {
-                    Task {
-                        await purchaseSubscription()
-                    }
-                }) {
-                    if isPurchasing {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                    } else {
-                        Text("Purchase".localized)
-                            .fontWeight(.semibold)
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(isPurchasing || storeManager.hasUnlimitedSubscription)
-                
-                if storeManager.hasUnlimitedSubscription {
-                    Text("You have unlimited scans!".localized)
-                        .foregroundColor(.green)
-                        .font(.headline)
-                }
-                
-                #if DEBUG
-                if storeManager.hasUnlimitedSubscription {
-                    Button("Reset Purchase (Test Only)".localized) {
-                        Task {
-                            await storeManager.resetPurchases()
-                        }
-                    }
-                    .buttonStyle(.bordered)
-                    .foregroundColor(.red)
-                }
-                #endif
-            }
-            .padding()
-            .frame(width: 400)
-            .navigationTitle("Subscription".localized)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close".localized) {
-                        dismiss()
-                    }
-                }
-            }
-        }
-    }
-    
-    private func purchaseSubscription() async {
-        guard let product = storeManager.products.first else { return }
-        
-        isPurchasing = true
-        errorMessage = nil
-        
-        do {
-            try await storeManager.purchase(product)
-        } catch StoreError.userCancelled {
-            errorMessage = "Purchase cancelled".localized
-        } catch {
-            errorMessage = "Purchase failed: \(error.localizedDescription)".localized
-        }
-        
-        isPurchasing = false
     }
 }
 
@@ -435,32 +329,6 @@ struct ResultsView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 VStack {
-//                    HStack {
-//                        Spacer()
-//                        
-//                        Button(action: viewModel.exportToJSON) {
-//                            Label("Export JSON".localized, systemImage: "square.and.arrow.down")
-//                        }
-//                        .buttonStyle(.bordered)
-//                        
-//                        Button(action: viewModel.exportToCSV) {
-//                            Label("Export CSV".localized, systemImage: "tablecells")
-//                        }
-//                        .buttonStyle(.bordered)
-//                        
-//                        Button(action: viewModel.exportToLocalizationFiles) {
-//                            Label("Export Strings".localized, systemImage: "text.quote")
-//                        }
-//                        .buttonStyle(.bordered)
-//                        
-//                        Button(action: viewModel.exportToXCStrings) {
-//                            Label("Export XCStrings".localized, systemImage: "globe")
-//                        }
-//                        .buttonStyle(.bordered)
-//                        .padding(.trailing)
-//                    }
-//                    .padding(.top)
-                    
                     List(viewModel.results, id: \.self) { result in
                         VStack(alignment: .leading, spacing: 4) {
                             Text(result.content)
