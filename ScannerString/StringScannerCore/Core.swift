@@ -163,6 +163,8 @@ public class StringVisitor: SyntaxVisitor {
             .compactMap { $0.as(StringSegmentSyntax.self)?.content.text }
             .joined()
         
+        guard !content.isEmpty else { return .skipChildren }
+        
         let isLocalized = isInLocalizationContext(node)
         
         strings.append(StringLocation(
