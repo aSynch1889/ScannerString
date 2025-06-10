@@ -9,12 +9,12 @@
       }
     ]
   },
-  "identifier" : "com.scannerstring.subscription",
+  "identifier" : "com.scannerstring.subscription01",
   "nonRenewingSubscriptions" : [
     {
       "displayPrice" : "3.99",
       "familyShareable" : false,
-      "internalID" : "com.scannerstring.subscription.unlimited",
+      "internalID" : "com.scannerstring.subscription.unlimited01",
       "localizations" : [
         {
           "description" : "Unlock unlimited scans permanently",
@@ -37,7 +37,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.scannerstring.subscription.unlimited",
+      "productID" : "com.scannerstring.subscription.unlimited01",
       "referenceName" : "Unlimited Scan Subscription",
       "type" : "NonRenewingSubscription"
     }

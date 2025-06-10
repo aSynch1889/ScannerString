@@ -8,7 +8,7 @@ class StoreManager: ObservableObject {
     @Published private(set) var products: [Product] = []
     @Published private(set) var purchasedSubscriptions: [Product] = []
     
-    private let productIds = ["com.scannerstring.subscription.unlimited"]
+    private let productIds = ["com.scannerstring.subscription.unlimited01"]
     private var updateListenerTask: Task<Void, Error>?
     
     private init() {
