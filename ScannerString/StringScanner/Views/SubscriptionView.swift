@@ -5,7 +5,7 @@ struct SubscriptionView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var storeManager = StoreManager.shared
     @State private var isPurchasing = false
-    @State private var errorMessage: String?
+    @State private var showingSuccessMessage = false
     
     var body: some View {
         VStack(spacing: 24) {
@@ -44,61 +44,84 @@ struct SubscriptionView: View {
                     }
                     
                     // 价格卡片
-                    if let product = storeManager.products.first {
-                        VStack(spacing: 8) {
+                    VStack(spacing: 8) {
+                        if storeManager.isLoading {
+                            ProgressView()
+                                .scaleEffect(1.5)
+                        } else if let product = storeManager.products.first {
                             Text(product.displayPrice)
                                 .font(.system(size: 36, weight: .bold))
                                 .foregroundColor(.primary)
-                            
+
                             Text("One-time purchase".localized)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
+                        } else {
+                            Text("Unable to load pricing".localized)
+                                .font(.headline)
+                                .foregroundColor(.secondary)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 20)
-                        .background(Color.secondary.opacity(0.1))
-                        .cornerRadius(16)
                     }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 80)
+                    .background(Color.secondary.opacity(0.1))
+                    .cornerRadius(16)
                     
-                    // 错误信息
-                    if let error = errorMessage {
-                        Text(error)
+                    // 状态消息
+                    if let error = storeManager.error {
+                        Text(error.localizedDescription)
                             .foregroundColor(.red)
+                            .font(.caption)
+                            .padding(.horizontal)
+                    }
+
+                    if showingSuccessMessage {
+                        Text("Purchase successful!".localized)
+                            .foregroundColor(.green)
                             .font(.caption)
                             .padding(.horizontal)
                     }
                     
                     // 购买按钮
-                    Button(action: {
-                        Task {
-                            await purchaseSubscription()
-                        }
-                    }) {
+                    if storeManager.hasUnlimitedSubscription {
                         HStack {
-                            if isPurchasing {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                            } else {
-                                Text("Purchase".localized)
-                                    .fontWeight(.semibold)
-                            }
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                            Text("Already Purchased".localized)
+                                .fontWeight(.semibold)
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(storeManager.hasUnlimitedSubscription ? Color.accentColor : Color.blue)
-                        .foregroundColor(.white)
+                        .background(Color.green.opacity(0.1))
+                        .foregroundColor(.green)
                         .cornerRadius(12)
+                        .padding(.horizontal)
+                    } else {
+                        Button(action: {
+                            Task {
+                                await purchaseSubscription()
+                            }
+                        }) {
+                            HStack {
+                                if isPurchasing {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                } else {
+                                    Text("Purchase".localized)
+                                        .fontWeight(.semibold)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(storeManager.products.isEmpty ? Color.gray : Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(isPurchasing || storeManager.products.isEmpty || storeManager.isLoading)
+                        .padding(.horizontal)
                     }
-                    .buttonStyle(.plain)
-                    .disabled(isPurchasing || storeManager.hasUnlimitedSubscription)
-                    .padding(.horizontal)
                     
-                    // 已购买状态
-                    if storeManager.hasUnlimitedSubscription {
-                        Text("You have unlimited scans!".localized)
-                            .foregroundColor(.accentColor)
-                            .font(.headline)
-                    }
                     
                     // 测试重置按钮
                     #if DEBUG
@@ -116,23 +139,25 @@ struct SubscriptionView: View {
                 .padding()
             }
         }
-        .frame(width: 400, height: 500)
+        .frame(minWidth: 350, maxWidth: 450, minHeight: 400, maxHeight: 600)
     }
     
     private func purchaseSubscription() async {
         guard let product = storeManager.products.first else { return }
-        
+
         isPurchasing = true
-        errorMessage = nil
-        
+        showingSuccessMessage = false
+
         do {
             try await storeManager.purchase(product)
-        } catch StoreError.userCancelled {
-            errorMessage = "Purchase cancelled".localized
+            showingSuccessMessage = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                showingSuccessMessage = false
+            }
         } catch {
-            errorMessage = "Purchase failed: \(error.localizedDescription)".localized
+            // 错误已经在 StoreManager 中设置
         }
-        
+
         isPurchasing = false
     }
 }

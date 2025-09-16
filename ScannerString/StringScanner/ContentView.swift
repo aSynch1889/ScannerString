@@ -42,7 +42,7 @@ struct ContentView: View {
                 .presentationDragIndicator(.visible)
         }
         .task {
-            storeManager.start()
+            await storeManager.start()
         }
     }
 }
