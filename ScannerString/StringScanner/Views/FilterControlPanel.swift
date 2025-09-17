@@ -11,7 +11,7 @@ struct FilterControlPanel: View {
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .foregroundColor(.accentColor)
                     .font(.system(size: 14))
-                Text("字符串过滤器".localized)
+                Text("string_filter".localized)
                     .font(.headline)
                     .font(.system(size: 14))
 
@@ -33,7 +33,7 @@ struct FilterControlPanel: View {
                 VStack(spacing: 12) {
                     // 过滤器总开关
                     HStack {
-                        Toggle("启用过滤器".localized, isOn: Binding(
+                        Toggle("enable_filter".localized, isOn: Binding(
                             get: { viewModel.filterEnabled },
                             set: { newValue in
                                 viewModel.filterEnabled = newValue
@@ -57,7 +57,7 @@ struct FilterControlPanel: View {
 
                         // 语言过滤器
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("语言类型".localized)
+                            Text("language_type".localized)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
 
@@ -94,7 +94,7 @@ struct FilterControlPanel: View {
                         // 长度过滤器
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text("最小长度".localized)
+                                Text("minimum_length".localized)
                                     .font(.subheadline)
                                     .fontWeight(.medium)
 
@@ -113,7 +113,7 @@ struct FilterControlPanel: View {
                                 in: 1...20,
                                 step: 1
                             ) {
-                                Text("最小长度")
+                                Text("minimum_length".localized)
                             } onEditingChanged: { editing in
                                 if !editing {
                                     viewModel.updateFilterManager()
@@ -126,13 +126,13 @@ struct FilterControlPanel: View {
 
                         // 内容过滤器
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("内容过滤".localized)
+                            Text("content_filter".localized)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
 
                             VStack(spacing: 6) {
                                 HStack {
-                                    Toggle("排除空字符串".localized, isOn: Binding(
+                                    Toggle("exclude_empty_strings".localized, isOn: Binding(
                                         get: { viewModel.excludeEmptyStrings },
                                         set: { newValue in
                                             viewModel.excludeEmptyStrings = newValue
@@ -146,7 +146,7 @@ struct FilterControlPanel: View {
                                 }
 
                                 HStack {
-                                    Toggle("排除纯数字".localized, isOn: Binding(
+                                    Toggle("exclude_numbers_only".localized, isOn: Binding(
                                         get: { viewModel.excludeNumericOnly },
                                         set: { newValue in
                                             viewModel.excludeNumericOnly = newValue
@@ -160,7 +160,7 @@ struct FilterControlPanel: View {
                                 }
 
                                 HStack {
-                                    Toggle("排除重复字符串".localized, isOn: Binding(
+                                    Toggle("exclude_duplicate_strings".localized, isOn: Binding(
                                         get: { viewModel.excludeDuplicates },
                                         set: { newValue in
                                             viewModel.excludeDuplicates = newValue
@@ -179,30 +179,30 @@ struct FilterControlPanel: View {
 
                         // 预设配置
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("快速配置".localized)
+                            Text("quick_configuration".localized)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
 
                             HStack(spacing: 8) {
-                                Button("基础".localized) {
+                                Button("basic".localized) {
                                     applyBasicFilter()
                                 }
                                 .buttonStyle(.bordered)
                                 .controlSize(.small)
 
-                                Button("严格".localized) {
+                                Button("strict".localized) {
                                     applyStrictFilter()
                                 }
                                 .buttonStyle(.bordered)
                                 .controlSize(.small)
 
-                                Button("本地化".localized) {
+                                Button("localization".localized) {
                                     applyLocalizationFilter()
                                 }
                                 .buttonStyle(.bordered)
                                 .controlSize(.small)
 
-                                Button("重置".localized) {
+                                Button("reset".localized) {
                                     resetFilters()
                                 }
                                 .buttonStyle(.bordered)
@@ -215,12 +215,12 @@ struct FilterControlPanel: View {
                             Divider()
 
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("过滤统计".localized)
+                                Text("filter_statistics".localized)
                                     .font(.subheadline)
                                     .fontWeight(.medium)
 
                                 HStack {
-                                    Text("原始数量:".localized)
+                                    Text("original_count".localized)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                     Text("\(filterResult.originalCount)")
@@ -229,7 +229,7 @@ struct FilterControlPanel: View {
 
                                     Spacer()
 
-                                    Text("过滤后:".localized)
+                                    Text("filtered_count".localized)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                     Text("\(filterResult.filteredCount)")
@@ -239,7 +239,7 @@ struct FilterControlPanel: View {
                                 }
 
                                 HStack {
-                                    Text("过滤率:".localized)
+                                    Text("filter_rate".localized)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                     Text("\(String(format: "%.1f", filterResult.filterRatio * 100))%")

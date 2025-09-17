@@ -3,7 +3,7 @@ import Foundation
 // 语言过滤器
 public struct LanguageFilter: StringFilter {
     public let name = "LanguageFilter"
-    public let description = "过滤特定语言的字符串"
+    public let description = "filter_specific_language_strings".localized
 
     public let targetLanguages: Set<DetectedLanguage>
 

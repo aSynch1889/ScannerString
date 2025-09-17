@@ -183,8 +183,8 @@ struct SidebarView: View {
                 // 扫描统计卡片
                 CardView(title: "扫描统计".localized, icon: "chart.bar") {
                     VStack(spacing: 8) {
-                        StatItem(icon: "text.quote", title: "字符串数量".localized, value: "\(viewModel.results.count)")
-                        StatItem(icon: "doc.text", title: "文件数量".localized, value: "\(Set(viewModel.results.map { $0.file }).count)")
+                        StatItem(icon: "text.quote", title: "string_count".localized, value: "\(viewModel.results.count)")
+                        StatItem(icon: "doc.text", title: "file_count".localized, value: "\(Set(viewModel.results.map { $0.file }).count)")
                     }
                 }
                 
@@ -192,18 +192,18 @@ struct SidebarView: View {
                 FilterControlPanel(viewModel: viewModel)
 
                 // 导出选项卡片
-                CardView(title: "导出选项".localized, icon: "square.and.arrow.down") {
+                CardView(title: "export_options".localized, icon: "square.and.arrow.down") {
                     VStack(spacing: 8) {
-                        ExportButton(title: "导出为 JSON".localized, icon: "doc.text", action: viewModel.exportToJSON, isDisabled: viewModel.results.isEmpty)
-                        ExportButton(title: "导出为 CSV".localized, icon: "tablecells", action: viewModel.exportToCSV, isDisabled: viewModel.results.isEmpty)
-                        ExportButton(title: "导出本地化文件".localized, icon: "globe", action: viewModel.exportToLocalizationFiles, isDisabled: viewModel.results.isEmpty)
-                        ExportButton(title: "导出 XCStrings".localized, icon: "doc.text.fill", action: viewModel.exportToXCStrings, isDisabled: viewModel.results.isEmpty)
+                        ExportButton(title: "export_as_json".localized, icon: "doc.text", action: viewModel.exportToJSON, isDisabled: viewModel.results.isEmpty)
+                        ExportButton(title: "export_as_csv".localized, icon: "tablecells", action: viewModel.exportToCSV, isDisabled: viewModel.results.isEmpty)
+                        ExportButton(title: "export_localization_files".localized, icon: "globe", action: viewModel.exportToLocalizationFiles, isDisabled: viewModel.results.isEmpty)
+                        ExportButton(title: "export_xcstrings".localized, icon: "doc.text.fill", action: viewModel.exportToXCStrings, isDisabled: viewModel.results.isEmpty)
                     }
                 }
                 
                 // 项目信息卡片
                 if !viewModel.selectedPath.isEmpty {
-                    CardView(title: "项目信息".localized, icon: "folder.fill") {
+                    CardView(title: "project_info".localized, icon: "folder.fill") {
                         HStack {
                             Image(systemName: "folder.fill")
                                 .foregroundColor(.accentColor)
@@ -384,10 +384,10 @@ struct ResultsView: View {
                     Divider()
 
                     // 标签页选择器
-                    Picker("视图", selection: $selectedTab) {
-                        Text("字符串列表".localized).tag(0)
-                        Text("语言分布".localized).tag(1)
-                        Text("过滤统计".localized).tag(2)
+                    Picker("view".localized, selection: $selectedTab) {
+                        Text("string_list".localized).tag(0)
+                        Text("language_distribution".localized).tag(1)
+                        Text("filter_statistics".localized).tag(2)
                     }
                     .pickerStyle(.segmented)
                     .padding(.horizontal, 12)
@@ -449,7 +449,7 @@ struct StringListView: View {
                         .foregroundColor(.secondary)
 
                     if result.isLocalized {
-                        Text("本地化".localized)
+                        Text("Localization".localized)
                             .font(.caption)
                             .foregroundColor(.blue)
                     }
@@ -556,21 +556,21 @@ struct FilterStatisticsView: View {
                 if let filterResult = viewModel.filterResult {
                     // 过滤概览
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("过滤概览".localized)
+                        Text("filter_overview".localized)
                             .font(.title2)
                             .fontWeight(.bold)
 
                         HStack {
-                            StatCard(title: "原始数量".localized, value: "\(filterResult.originalCount)", color: .secondary)
-                            StatCard(title: "过滤后".localized, value: "\(filterResult.filteredCount)", color: .accentColor)
-                            StatCard(title: "过滤率".localized, value: "\(String(format: "%.1f%%", filterResult.filterRatio * 100))", color: .orange)
+                            StatCard(title: "original_count_label".localized, value: "\(filterResult.originalCount)", color: .secondary)
+                            StatCard(title: "filtered_label".localized, value: "\(filterResult.filteredCount)", color: .accentColor)
+                            StatCard(title: "filter_rate_label".localized, value: "\(String(format: "%.1f%%", filterResult.filterRatio * 100))", color: .orange)
                         }
                     }
 
                     // 过滤步骤
                     if !filterResult.filterSteps.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("过滤步骤".localized)
+                            Text("filter_steps".localized)
                                 .font(.title2)
                                 .fontWeight(.bold)
 
@@ -617,7 +617,7 @@ struct FilterStatisticsView: View {
                         }
                     }
                 } else {
-                    Text("暂无过滤统计信息".localized)
+                    Text("no_filter_statistics".localized)
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding()

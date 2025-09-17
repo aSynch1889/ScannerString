@@ -33,10 +33,10 @@ public enum DetectedLanguage: String, CaseIterable, Codable {
         switch self {
         case .chinese: return "中文"
         case .english: return "English"
-        case .mixed: return "混合语言"
-        case .numeric: return "数字"
-        case .symbolic: return "符号"
-        case .unknown: return "未知"
+        case .mixed: return "mixed_language".localized
+        case .numeric: return "numbers".localized
+        case .symbolic: return "symbols".localized
+        case .unknown: return "unknown".localized
         }
     }
 }
@@ -52,12 +52,12 @@ public enum StringContentType: String, CaseIterable, Codable {
 
     public var displayName: String {
         switch self {
-        case .normal: return "普通文本"
-        case .url: return "URL地址"
-        case .filePath: return "文件路径"
-        case .apiEndpoint: return "API端点"
-        case .colorValue: return "颜色值"
-        case .sensitive: return "敏感信息"
+        case .normal: return "plain_text".localized
+        case .url: return "url_address".localized
+        case .filePath: return "file_path".localized
+        case .apiEndpoint: return "api_endpoint".localized
+        case .colorValue: return "color_value".localized
+        case .sensitive: return "sensitive_info".localized
         }
     }
 }
