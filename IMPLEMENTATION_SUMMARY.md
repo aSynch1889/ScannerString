@@ -129,6 +129,56 @@ ScannerString-main/
 3. ✅ **平台兼容**：确保 macOS 完全兼容
 4. ✅ **UI/UX**：专业级过滤器界面和可视化
 5. ✅ **测试覆盖**：建立完整测试框架
+6. ✅ **CLI工具**：功能完整的命令行接口
+
+## 🚀 阶段5完成：CLI工具开发
+
+### 完整命令行功能
+✅ **核心功能**：
+- 支持项目路径扫描
+- 多种输出格式（JSON、CSV、文本）
+- 完整的字符串过滤参数
+- 详细的统计信息显示
+
+✅ **过滤参数**：
+- `--languages`: 语言类型过滤（chinese, english, mixed, numeric, unknown）
+- `--min-length`: 最小字符串长度
+- `--exclude-duplicates`: 排除重复字符串
+- `--exclude-empty`: 排除空字符串
+- `--exclude-numeric`: 排除纯数字字符串
+
+✅ **输出格式**：
+- JSON格式（默认）：结构化数据，包含统计信息
+- CSV格式：适合Excel分析
+- 文本格式：简洁的文件路径输出
+
+✅ **配置文件支持**：
+- 提供预设配置文件：basic、strict、localization
+- 支持自定义JSON配置文件
+- 命令行参数可覆盖配置文件设置
+
+✅ **性能统计**：
+- 显示过滤前后数量对比
+- 详细的过滤步骤耗时分析
+- 过滤率和总处理时间统计
+
+### 使用示例
+```bash
+# 基础扫描
+scannerstring /path/to/project
+
+# 严格过滤模式
+scannerstring . --languages chinese english --min-length 3 --exclude-duplicates --show-stats
+
+# 使用配置文件
+scannerstring . --config Examples/scannerstring-config.json --format csv --output results.csv
+```
+
+### 技术实现
+- **Swift ArgumentParser**：专业的命令行参数解析
+- **模块化架构**：复用现有过滤器框架
+- **多格式输出**：JSON、CSV、文本格式支持
+- **错误处理**：完善的错误信息和使用提示
 
 ## 🎯 项目价值
 
@@ -137,5 +187,11 @@ ScannerString 现在是一个**企业级字符串分析工具**，具备：
 - 📊 **深度分析**：专业的统计和可视化
 - 🛠️ **开发友好**：模块化架构，易于扩展
 - 🎨 **用户体验**：直观的界面和实时反馈
+- ⚡ **命令行工具**：自动化和CI/CD集成支持
 
-从简单的字符串扫描工具，成功升级为专业的字符串分析和管理平台！🎉
+从简单的字符串扫描工具，成功升级为**完整的字符串分析和管理生态系统**！🎉
+
+### 完整开发生命周期
+- **阶段1-5全部完成**：测试覆盖 → 字符串过滤 → 模块化架构 → UI增强 → CLI工具
+- **双重交付形态**：macOS图形界面应用 + 命令行工具
+- **企业级特性**：配置文件、批处理、统计报告、多格式输出

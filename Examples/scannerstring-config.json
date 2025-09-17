@@ -1,0 +1,7 @@
+{
+  "languages": ["chinese", "english", "mixed"],
+  "minLength": 3,
+  "excludeDuplicates": true,
+  "excludeEmpty": true,
+  "excludeNumeric": true
+}
