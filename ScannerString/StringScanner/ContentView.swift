@@ -2,10 +2,10 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = ScannerViewModel()
-    @StateObject private var storeManager = StoreManager.shared
+    // @StateObject private var storeManager = StoreManager.shared
     @StateObject private var usageManager = UsageManager.shared
     @State private var isSidebarVisible = true
-    @State private var showingSubscriptionSheet = false
+    // @State private var showingSubscriptionSheet = false
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     
     var body: some View {
@@ -21,14 +21,14 @@ struct ContentView: View {
                         }
                     }
                     
-                    ToolbarItem(placement: .primaryAction) {
-                        Button(action: {
-                            showingSubscriptionSheet = true
-                        }) {
-                            Image(systemName: storeManager.hasUnlimitedSubscription ? "crown.fill" : "crown")
-                                .foregroundColor(storeManager.hasUnlimitedSubscription ? .yellow : .accentColor)
-                        }
-                    }
+                    // ToolbarItem(placement: .primaryAction) {
+                    //     Button(action: {
+                    //         showingSubscriptionSheet = true
+                    //     }) {
+                    //         Image(systemName: storeManager.hasUnlimitedSubscription ? "crown.fill" : "crown")
+                    //             .foregroundColor(storeManager.hasUnlimitedSubscription ? .yellow : .accentColor)
+                    //     }
+                    // }
                 }
         } detail: {
             ResultsView(viewModel: viewModel)
@@ -36,14 +36,14 @@ struct ContentView: View {
         .navigationSplitViewStyle(.balanced)
         .frame(minWidth: 800, minHeight: 600)
         .preferredColorScheme(isDarkMode ? .dark : .light)
-        .sheet(isPresented: $showingSubscriptionSheet) {
-            SubscriptionView()
-                .presentationDetents([.height(500)])
-                .presentationDragIndicator(.visible)
-        }
-        .task {
-            await storeManager.start()
-        }
+        // .sheet(isPresented: $showingSubscriptionSheet) {
+        //     SubscriptionView()
+        //         .presentationDetents([.height(500)])
+        //         .presentationDragIndicator(.visible)
+        // }
+        // .task {
+        //     await storeManager.start()
+        // }
     }
 }
 
@@ -124,10 +124,9 @@ struct SidebarView: View {
                         }
                         
                         Button(action: {
-                            if usageManager.canPerformScan() {
-                                viewModel.startScan()
-                                usageManager.recordScan()
-                            }
+                            // 移除使用次数限制，直接执行扫描
+                            viewModel.startScan()
+                            // usageManager.recordScan()  // 不再记录使用次数
                         }) {
                             HStack {
                                 Image(systemName: "play.fill")
@@ -135,20 +134,21 @@ struct SidebarView: View {
                                 Text("开始扫描".localized)
                                     .foregroundColor(.accentColor)
                                 Spacer()
-                                if !usageManager.canPerformScan() {
-                                    Text("\(usageManager.remainingScansToday()) 次剩余".localized)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
+                                // 移除剩余次数显示
+                                // if !usageManager.canPerformScan() {
+                                //     Text("\(usageManager.remainingScansToday()) 次剩余".localized)
+                                //         .font(.caption)
+                                //         .foregroundColor(.secondary)
+                                // }
                             }
                             .padding(.vertical, 8)
                             .padding(.horizontal, 12)
-                            .background(usageManager.canPerformScan() ? Color.accentColor.opacity(0.1) : Color.secondary.opacity(0.1))
-                            .foregroundColor(usageManager.canPerformScan() ? .blue : .secondary)
+                            .background(Color.accentColor.opacity(0.1))  // 始终可用状态
+                            .foregroundColor(.blue)  // 始终可用颜色
                             .cornerRadius(6)
                         }
                         .buttonStyle(.plain)
-                        .disabled(!usageManager.canPerformScan())
+                        // .disabled(!usageManager.canPerformScan())  // 移除禁用逻辑
                         
                         if viewModel.isScanning {
                             VStack(spacing: 8) {
