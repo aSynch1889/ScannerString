@@ -123,8 +123,8 @@
 "search_strings" = "Search strings...";
 "no_data" = "No data";
 "click_or_drag_folder_here" = "Click or drag a folder here";
-"过滤字符串内容（长度、类型等）" = "过滤字符串内容（长度、类型等）";
-"" = "";
+"filter_string_content" = "Filter string content (length, type, etc.)";
+"filter_duplicate_strings" = "Filter duplicate strings";
 "" = "";
 "" = "";
 "" = "";

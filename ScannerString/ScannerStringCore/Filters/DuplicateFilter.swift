@@ -3,7 +3,7 @@ import Foundation
 // 重复字符串过滤器
 public class DuplicateFilter: StringFilter {
     public let name = "DuplicateFilter"
-    public let description = "过滤重复的字符串"
+    public let description = "filter_duplicate_strings".localized
 
     public let excludeDuplicates: Bool
     private var seenStrings: [String: Int] = [:]

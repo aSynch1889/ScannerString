@@ -126,6 +126,8 @@
 "search_strings" = "文字列を検索...";
 "no_data" = "データなし";
 "click_or_drag_folder_here" = "クリックまたはフォルダをここにドラッグ";
+"filter_string_content" = "文字列内容をフィルタ（長さ、タイプなど）";
+"filter_duplicate_strings" = "重複文字列をフィルタ";
 
 // Subscription View
 "Subscription" = "サブスクリプション";

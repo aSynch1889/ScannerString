@@ -126,6 +126,8 @@
 "search_strings" = "搜尋字串...";
 "no_data" = "暫無資料";
 "click_or_drag_folder_here" = "點擊或拖拽資料夾到此處";
+"filter_string_content" = "過濾字串內容（長度、類型等）";
+"filter_duplicate_strings" = "過濾重複的字串";
 
 // Subscription View
 "Subscription" = "訂閱";
