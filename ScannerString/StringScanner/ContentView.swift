@@ -154,7 +154,7 @@ struct SidebarView: View {
                             VStack(spacing: 8) {
                                 ProgressView(value: viewModel.progress)
                                     .progressViewStyle(.linear)
-                                    .tint(.accentColor)
+                                    .accentColor(.accentColor)
                                 
                                 HStack {
                                     Text("\(viewModel.processedFiles)/\(viewModel.totalFiles) 文件".localized)
@@ -188,6 +188,9 @@ struct SidebarView: View {
                     }
                 }
                 
+                // 过滤器控制面板
+                FilterControlPanel(viewModel: viewModel)
+
                 // 导出选项卡片
                 CardView(title: "导出选项".localized, icon: "square.and.arrow.down") {
                     VStack(spacing: 8) {
@@ -314,10 +317,23 @@ struct ExportButton: View {
 
 struct ResultsView: View {
     @ObservedObject var viewModel: ScannerViewModel
-    
+    @State private var searchText = ""
+    @State private var selectedTab = 0
+
+    var filteredResults: [StringLocation] {
+        if searchText.isEmpty {
+            return viewModel.results
+        } else {
+            return viewModel.results.filter {
+                $0.content.localizedCaseInsensitiveContains(searchText) ||
+                $0.file.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+
     var body: some View {
-        VStack {
-            if viewModel.results.isEmpty {
+        VStack(spacing: 0) {
+            if viewModel.results.isEmpty && viewModel.rawResults.isEmpty {
                 VStack(spacing: 16) {
                     Image(systemName: "doc.text.magnifyingglass")
                         .font(.system(size: 48))
@@ -330,34 +346,309 @@ struct ResultsView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                VStack {
-                    List(viewModel.results, id: \.self) { result in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(result.content)
-                                .font(.body)
-                            
-                            HStack {
-                                Text(result.file)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                
-                                Text("Line \(result.line)")
-                                    .font(.caption)
-                                    .foregroundColor(.accentColor)
-                                
-                                if result.isLocalized {
-                                    Text("Localized".localized)
-                                        .font(.caption)
-                                        .foregroundColor(.blue)
-                                }
-                            }
+                VStack(spacing: 0) {
+                    // 顶部工具栏
+                    HStack {
+                        // 搜索框
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.secondary)
+                                .font(.system(size: 12))
+
+                            TextField("搜索字符串...".localized, text: $searchText)
+                                .textFieldStyle(.plain)
+                                .font(.system(size: 12))
                         }
+                        .padding(.horizontal, 8)
                         .padding(.vertical, 4)
+                        .background(Color.secondary.opacity(0.1))
+                        .cornerRadius(6)
+
+                        Spacer()
+
+                        // 结果统计
+                        if !searchText.isEmpty {
+                            Text("找到 \(filteredResults.count) 项".localized)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        } else if let filterResult = viewModel.filterResult {
+                            Text("\(filterResult.filteredCount)/\(filterResult.originalCount) 项".localized)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color(.controlBackgroundColor))
+
+                    Divider()
+
+                    // 标签页选择器
+                    Picker("视图", selection: $selectedTab) {
+                        Text("字符串列表".localized).tag(0)
+                        Text("语言分布".localized).tag(1)
+                        Text("过滤统计".localized).tag(2)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+
+                    Divider()
+
+                    // 内容区域
+                    Group {
+                        switch selectedTab {
+                        case 0:
+                            StringListView(results: filteredResults)
+                        case 1:
+                            LanguageDistributionView(results: viewModel.results)
+                        case 2:
+                            FilterStatisticsView(viewModel: viewModel)
+                        default:
+                            StringListView(results: filteredResults)
+                        }
                     }
                 }
             }
         }
         .frame(minWidth: 500)
+    }
+}
+
+// 字符串列表视图
+struct StringListView: View {
+    let results: [StringLocation]
+
+    var body: some View {
+        List(results, id: \.self) { result in
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(result.content)
+                        .font(.body)
+                        .lineLimit(2)
+
+                    Spacer()
+
+                    // 语言标签
+                    Text(result.detectedLanguage.displayName)
+                        .font(.caption)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(languageColor(result.detectedLanguage))
+                        .foregroundColor(.white)
+                        .cornerRadius(4)
+                }
+
+                HStack {
+                    Text(URL(fileURLWithPath: result.file).lastPathComponent)
+                        .font(.caption)
+                        .foregroundColor(.accentColor)
+
+                    Text("Line \(result.line):\(result.column)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    if result.isLocalized {
+                        Text("本地化".localized)
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                    }
+
+                    // 内容类型标签
+                    if result.contentType != .normal {
+                        Text(result.contentType.displayName)
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
+
+                    Spacer()
+
+                    Text("\(result.content.count) 字符")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding(.vertical, 2)
+        }
+    }
+
+    private func languageColor(_ language: DetectedLanguage) -> Color {
+        switch language {
+        case .chinese: return .red
+        case .english: return .blue
+        case .mixed: return .purple
+        case .numeric: return .orange
+        case .symbolic: return .gray
+        case .unknown: return .secondary
+        }
+    }
+}
+
+// 语言分布视图
+struct LanguageDistributionView: View {
+    let results: [StringLocation]
+
+    private var languageStats: [(DetectedLanguage, Int)] {
+        var counts: [DetectedLanguage: Int] = [:]
+        for result in results {
+            counts[result.detectedLanguage, default: 0] += 1
+        }
+        return counts.sorted { $0.value > $1.value }
+    }
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                if !results.isEmpty {
+                    ForEach(languageStats, id: \.0) { language, count in
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text(language.displayName)
+                                    .font(.headline)
+
+                                Spacer()
+
+                                Text("\(count) 项")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+
+                                Text("(\(String(format: "%.1f", Double(count) / Double(results.count) * 100))%)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+
+                            ProgressView(value: Double(count), total: Double(results.count))
+                                .progressViewStyle(.linear)
+                                .accentColor(languageColor(language))
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                } else {
+                    Text("暂无数据".localized)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding()
+                }
+            }
+            .padding(.vertical, 16)
+        }
+    }
+
+    private func languageColor(_ language: DetectedLanguage) -> Color {
+        switch language {
+        case .chinese: return .red
+        case .english: return .blue
+        case .mixed: return .purple
+        case .numeric: return .orange
+        case .symbolic: return .gray
+        case .unknown: return .secondary
+        }
+    }
+}
+
+// 过滤统计视图
+struct FilterStatisticsView: View {
+    @ObservedObject var viewModel: ScannerViewModel
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                if let filterResult = viewModel.filterResult {
+                    // 过滤概览
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("过滤概览".localized)
+                            .font(.title2)
+                            .fontWeight(.bold)
+
+                        HStack {
+                            StatCard(title: "原始数量".localized, value: "\(filterResult.originalCount)", color: .secondary)
+                            StatCard(title: "过滤后".localized, value: "\(filterResult.filteredCount)", color: .accentColor)
+                            StatCard(title: "过滤率".localized, value: "\(String(format: "%.1f%%", filterResult.filterRatio * 100))", color: .orange)
+                        }
+                    }
+
+                    // 过滤步骤
+                    if !filterResult.filterSteps.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("过滤步骤".localized)
+                                .font(.title2)
+                                .fontWeight(.bold)
+
+                            ForEach(Array(filterResult.filterSteps.enumerated()), id: \.offset) { index, step in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        Text("\(index + 1). \(step.filterName)")
+                                            .font(.headline)
+
+                                        Spacer()
+
+                                        Text("\(step.beforeCount) → \(step.afterCount)")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                    }
+
+                                    Text(step.filterDescription)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+
+                                    HStack {
+                                        Text("移除: \(step.filteredCount) 项")
+                                            .font(.caption)
+
+                                        Text("(\(String(format: "%.1f%%", step.filterRatio * 100)))")
+                                            .font(.caption)
+                                            .foregroundColor(.orange)
+
+                                        Spacer()
+
+                                        Text("耗时: \(String(format: "%.3f", step.duration))秒")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+
+                                    ProgressView(value: Double(step.filteredCount), total: Double(step.beforeCount))
+                                        .progressViewStyle(.linear)
+                                        .accentColor(.orange)
+                                }
+                                .padding(12)
+                                .background(Color.secondary.opacity(0.1))
+                                .cornerRadius(8)
+                            }
+                        }
+                    }
+                } else {
+                    Text("暂无过滤统计信息".localized)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding()
+                }
+            }
+            .padding(16)
+        }
+    }
+}
+
+// 统计卡片
+struct StatCard: View {
+    let title: String
+    let value: String
+    let color: Color
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Text(value)
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(color)
+
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(12)
+        .background(Color.secondary.opacity(0.1))
+        .cornerRadius(8)
     }
 }
 

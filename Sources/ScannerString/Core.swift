@@ -54,8 +54,17 @@ public class ProjectScanner {
     private let fileManager = FileManager.default
     private let queue = DispatchQueue(label: "result.queue", attributes: .concurrent)
     private var allStrings: [StringLocation] = []
-    
+    private var filterManager: FilterManager?
+
     public init() {}
+
+    public init(filterManager: FilterManager) {
+        self.filterManager = filterManager
+    }
+
+    public func setFilterManager(_ filterManager: FilterManager) {
+        self.filterManager = filterManager
+    }
     
     public func scanProject(at path: String) {
         print("Scanning project at: \(path)", to: &stderr)
@@ -85,6 +94,36 @@ public class ProjectScanner {
     }
     
     public func getScanResults() -> [StringLocation] {
+        let sortedResults = allStrings.sorted {
+            $0.file == $1.file ?
+                ($0.line == $1.line ? $0.column < $1.column : $0.line < $1.line) :
+                $0.file < $1.file
+        }
+
+        // 如果设置了过滤器管理器，应用过滤器
+        if let filterManager = filterManager {
+            let filterResult = filterManager.applyFilters(to: sortedResults)
+            return filterResult.filteredResults
+        }
+
+        return sortedResults
+    }
+
+    public func getScanResultsWithFilterInfo() -> FilterResult? {
+        let sortedResults = allStrings.sorted {
+            $0.file == $1.file ?
+                ($0.line == $1.line ? $0.column < $1.column : $0.line < $1.line) :
+                $0.file < $1.file
+        }
+
+        guard let filterManager = filterManager else {
+            return nil
+        }
+
+        return filterManager.applyFilters(to: sortedResults)
+    }
+
+    public func getRawScanResults() -> [StringLocation] {
         return allStrings.sorted {
             $0.file == $1.file ?
                 ($0.line == $1.line ? $0.column < $1.column : $0.line < $1.line) :

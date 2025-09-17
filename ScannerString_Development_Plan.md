@@ -99,25 +99,30 @@ struct ScannerCLI {
 
 ### 1. **模块化重构**
 
-将核心扫描逻辑独立为 Package：
+已实现双重架构设计：
 
 ```swift
-// 建议的包结构
-ScannerStringCore/           // 核心扫描逻辑
-├── Sources/
-│   ├── ScannerCore/        // 主要扫描功能
-│   ├── Filters/            // 新增：字符串过滤器模块
+// 当前项目结构
+项目根目录/
+├── Sources/ScannerString/       // Swift Package（用于测试和CLI）
+│   ├── Filters/                // 字符串过滤器模块
+│   │   ├── StringFilter.swift
 │   │   ├── LanguageFilter.swift
 │   │   ├── DuplicateFilter.swift
-│   │   └── ContentFilter.swift
-│   ├── Exporters/          // 导出格式处理
-│   └── Utils/              // 工具类
-├── Tests/
-└── Package.swift
-
-ScannerStringApp/           // macOS 应用
-ScannerStringCLI/          // 命令行工具
+│   │   ├── ContentFilter.swift
+│   │   └── FilterManager.swift
+│   └── Core.swift              // 核心扫描功能
+├── Tests/                      // 完整测试套件
+├── ScannerString/              // macOS 应用
+│   ├── ScannerStringCore/      // 应用内核心代码（复制自Sources）
+│   └── StringScanner/          // UI 和应用逻辑
+└── Package.swift               // Swift Package 定义
 ```
+
+**优势**：
+- Swift Package Manager 用于测试和独立模块开发
+- Xcode 应用项目避免复杂的包依赖
+- 代码复用，双重保障
 
 ### 2. **过滤器架构设计**
 

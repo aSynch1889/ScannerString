@@ -14,11 +14,71 @@ class ScannerViewModel: ObservableObject {
     @Published var currentFile: String = ""
     @Published var processedFiles: Int = 0
     @Published var totalFiles: Int = 0
-    
-    private let scanner = ProjectScanner()
+
+    // 过滤器相关属性
+    @Published var filterEnabled = true
+    @Published var selectedLanguages: Set<DetectedLanguage> = [.chinese, .english, .mixed]
+    @Published var excludeDuplicates = false
+    @Published var minStringLength = 1
+    @Published var excludeEmptyStrings = true
+    @Published var excludeNumericOnly = false
+    @Published var filterResult: FilterResult?
+    @Published var rawResults: [StringLocation] = []
+
+    private let scanner: ProjectScanner
     private let fileManager = FileManager.default
     private let queue = DispatchQueue(label: "result.queue", attributes: .concurrent)
     private var allStrings: [StringLocation] = []
+    private var filterManager = FilterManager()
+
+    init() {
+        scanner = ProjectScanner()
+        updateFilterManager()
+    }
+
+    // 更新过滤器管理器
+    func updateFilterManager() {
+        filterManager.clearFilters()
+
+        if filterEnabled {
+            // 添加内容过滤器
+            let contentFilter = ContentFilter(
+                minLength: minStringLength,
+                excludeEmpty: excludeEmptyStrings,
+                excludeNumericOnly: excludeNumericOnly
+            )
+            filterManager.addFilter(contentFilter)
+
+            // 添加语言过滤器
+            if !selectedLanguages.isEmpty {
+                let languageFilter = LanguageFilter(targetLanguages: selectedLanguages)
+                filterManager.addFilter(languageFilter)
+            }
+
+            // 添加重复过滤器
+            if excludeDuplicates {
+                let duplicateFilter = DuplicateFilter(excludeDuplicates: true)
+                filterManager.addFilter(duplicateFilter)
+            }
+        }
+
+        scanner.setFilterManager(filterManager)
+        applyCurrentFilters()
+    }
+
+    // 应用当前过滤器到结果
+    func applyCurrentFilters() {
+        guard !rawResults.isEmpty else { return }
+
+        if filterEnabled {
+            let filterResult = filterManager.applyFilters(to: rawResults)
+            self.filterResult = filterResult
+            self.results = filterResult.filteredResults
+        } else {
+            self.results = rawResults
+            self.filterResult = nil
+        }
+    }
     
     func selectFolder() {
         let openPanel = NSOpenPanel()
@@ -148,11 +208,12 @@ class ScannerViewModel: ObservableObject {
     }
     
     private func outputResults() {
-        results = allStrings.sorted {
+        rawResults = allStrings.sorted {
             $0.file == $1.file ?
                 ($0.line == $1.line ? $0.column < $1.column : $0.line < $1.line) :
                 $0.file < $1.file
         }
+        applyCurrentFilters()
     }
     
     func exportToJSON() {
