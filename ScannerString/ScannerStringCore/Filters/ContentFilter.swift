@@ -3,7 +3,7 @@ import Foundation
 // 内容过滤器
 public struct ContentFilter: StringFilter {
     public let name = "ContentFilter"
-    public let description = "过滤字符串内容（长度、类型等）"
+    public let description = "过滤字符串内容（长度、类型等）".localized
 
     public let minLength: Int
     public let maxLength: Int?

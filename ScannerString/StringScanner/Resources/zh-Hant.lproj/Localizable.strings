@@ -123,6 +123,9 @@
 "filter_steps" = "過濾步驟";
 "no_filter_statistics" = "沒有過濾統計資訊";
 "filter_specific_language_strings" = "過濾特定語言的字串";
+"search_strings" = "搜尋字串...";
+"no_data" = "暫無資料";
+"click_or_drag_folder_here" = "點擊或拖拽資料夾到此處";
 
 // Subscription View
 "Subscription" = "訂閱";

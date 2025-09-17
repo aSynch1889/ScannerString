@@ -59,7 +59,7 @@ struct SidebarView: View {
                     Text("String Scanner".localized)
                         .font(.title2)
                         .fontWeight(.bold)
-                    Text("扫描项目中的字符串".localized)
+                    Text("scan_strings_in_project".localized)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -67,7 +67,7 @@ struct SidebarView: View {
                 .padding(.horizontal)
                 
                 // 扫描控制卡片
-                CardView(title: "扫描控制".localized, icon: "magnifyingglass") {
+                CardView(title: "scan_controls".localized, icon: "magnifyingglass") {
                     VStack(spacing: 8) {
                         // 合并的选择区域
                         ZStack {
@@ -83,7 +83,7 @@ struct SidebarView: View {
                                     Image(systemName: "folder.badge.plus")
                                         .font(.system(size: 24))
                                         .foregroundColor(.accentColor)
-                                    Text("点击或拖拽文件夹到此处".localized)
+                                    Text("click_or_drag_folder_here".localized)
                                         .font(.system(size: 12))
                                         .foregroundColor(.secondary)
                                 }
@@ -131,7 +131,7 @@ struct SidebarView: View {
                             HStack {
                                 Image(systemName: "play.fill")
                                     .foregroundColor(.accentColor)
-                                Text("开始扫描".localized)
+                                Text("start_scanning".localized)
                                     .foregroundColor(.accentColor)
                                 Spacer()
                                 // 移除剩余次数显示
@@ -181,7 +181,7 @@ struct SidebarView: View {
                 }
                 
                 // 扫描统计卡片
-                CardView(title: "扫描统计".localized, icon: "chart.bar") {
+                CardView(title: "scan_statistics".localized, icon: "chart.bar") {
                     VStack(spacing: 8) {
                         StatItem(icon: "text.quote", title: "string_count".localized, value: "\(viewModel.results.count)")
                         StatItem(icon: "doc.text", title: "file_count".localized, value: "\(Set(viewModel.results.map { $0.file }).count)")
@@ -355,7 +355,7 @@ struct ResultsView: View {
                                 .foregroundColor(.secondary)
                                 .font(.system(size: 12))
 
-                            TextField("搜索字符串...".localized, text: $searchText)
+                            TextField("search_strings".localized, text: $searchText)
                                 .textFieldStyle(.plain)
                                 .font(.system(size: 12))
                         }
@@ -524,7 +524,7 @@ struct LanguageDistributionView: View {
                         .padding(.horizontal, 16)
                     }
                 } else {
-                    Text("暂无数据".localized)
+                    Text("no_data".localized)
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding()

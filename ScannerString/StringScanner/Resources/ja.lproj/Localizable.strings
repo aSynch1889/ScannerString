@@ -123,6 +123,9 @@
 "filter_steps" = "フィルタステップ";
 "no_filter_statistics" = "フィルタ統計情報なし";
 "filter_specific_language_strings" = "特定言語の文字列をフィルタ";
+"search_strings" = "文字列を検索...";
+"no_data" = "データなし";
+"click_or_drag_folder_here" = "クリックまたはフォルダをここにドラッグ";
 
 // Subscription View
 "Subscription" = "サブスクリプション";

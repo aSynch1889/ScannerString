@@ -123,6 +123,9 @@
 "filter_steps" = "过滤步骤";
 "no_filter_statistics" = "暂无过滤统计信息";
 "filter_specific_language_strings" = "过滤特定语言的字符串";
+"search_strings" = "搜索字符串...";
+"no_data" = "暂无数据";
+"click_or_drag_folder_here" = "点击或拖拽文件夹到此处";
 
 // Subscription View
 "Subscription" = "订阅";

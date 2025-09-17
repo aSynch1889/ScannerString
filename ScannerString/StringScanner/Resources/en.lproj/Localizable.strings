@@ -120,10 +120,10 @@
 "filter_rate_label" = "Filter Rate";
 "filter_steps" = "Filter Steps";
 "no_filter_statistics" = "No filter statistics available";
-"搜索字符串..." = "搜索字符串...";
-"暂无数据" = "暂无数据";
-"" = "";
-"" = "";
+"search_strings" = "Search strings...";
+"no_data" = "No data";
+"click_or_drag_folder_here" = "Click or drag a folder here";
+"过滤字符串内容（长度、类型等）" = "过滤字符串内容（长度、类型等）";
 "" = "";
 "" = "";
 "" = "";
