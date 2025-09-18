@@ -99,7 +99,7 @@ class ScannerViewModel: ObservableObject {
         if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory) && isDirectory.boolValue {
             selectedPath = url.path
         } else {
-            errorMessage = "请拖拽文件夹而不是文件".localized
+            errorMessage = "drag_folder_not_file".localized
         }
     }
     

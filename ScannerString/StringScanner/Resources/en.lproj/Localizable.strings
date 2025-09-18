@@ -125,6 +125,13 @@
 "click_or_drag_folder_here" = "Click or drag a folder here";
 "filter_string_content" = "Filter string content (length, type, etc.)";
 "filter_duplicate_strings" = "Filter duplicate strings";
+"scanning_progress" = "Scanning: %@";
+"found_items" = "Found %d items";
+"character_count" = "%d characters";
+"item_count" = "%d items";
+"removed_items" = "Removed: %d items";
+"time_taken" = "Time taken: %@ seconds";
+"drag_folder_not_file" = "Please drag a folder, not a file";
 "" = "";
 "" = "";
 "" = "";

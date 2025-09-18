@@ -128,6 +128,13 @@
 "click_or_drag_folder_here" = "点击或拖拽文件夹到此处";
 "filter_string_content" = "过滤字符串内容（长度、类型等）";
 "filter_duplicate_strings" = "过滤重复的字符串";
+"scanning_progress" = "正在扫描: %@";
+"found_items" = "找到 %d 项";
+"character_count" = "%d 字符";
+"item_count" = "%d 项";
+"removed_items" = "移除: %d 项";
+"time_taken" = "耗时: %@秒";
+"drag_folder_not_file" = "请拖拽文件夹而不是文件";
 
 // Subscription View
 "Subscription" = "订阅";

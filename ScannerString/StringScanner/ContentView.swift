@@ -169,7 +169,7 @@ struct SidebarView: View {
                                 }
                                 
                                 if !viewModel.currentFile.isEmpty {
-                                    Text("正在扫描: \(viewModel.currentFile)".localized)
+                                    Text(String(format: "scanning_progress".localized, viewModel.currentFile))
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                         .lineLimit(1)
@@ -368,7 +368,8 @@ struct ResultsView: View {
 
                         // 结果统计
                         if !searchText.isEmpty {
-                            Text("找到 \(filteredResults.count) 项".localized)
+                            Text(String(format: "found_items".localized, filteredResults.count))
+//                            Text("找到 \(filteredResults.count) 项".localized)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         } else if let filterResult = viewModel.filterResult {
@@ -463,7 +464,8 @@ struct StringListView: View {
 
                     Spacer()
 
-                    Text("\(result.content.count) 字符")
+                    Text(String(format: "character_count".localized, result.content.count))
+//                    Text("\(result.content.count) 字符")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -592,7 +594,8 @@ struct FilterStatisticsView: View {
                                         .foregroundColor(.secondary)
 
                                     HStack {
-                                        Text("移除: \(step.filteredCount) 项")
+                                        Text(String(format: "removed_items".localized, step.filteredCount))
+//                                        Text("移除: \(step.filteredCount) 项")
                                             .font(.caption)
 
                                         Text("(\(String(format: "%.1f%%", step.filterRatio * 100)))")
@@ -601,7 +604,8 @@ struct FilterStatisticsView: View {
 
                                         Spacer()
 
-                                        Text("耗时: \(String(format: "%.3f", step.duration))秒")
+                                        Text(String(format: "time_taken".localized, String(format: "%.3f", step.duration)))
+//                                        Text("耗时: \(String(format: "%.3f", step.duration))秒")
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     }

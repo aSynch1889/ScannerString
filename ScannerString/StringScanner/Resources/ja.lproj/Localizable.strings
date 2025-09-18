@@ -128,6 +128,13 @@
 "click_or_drag_folder_here" = "クリックまたはフォルダをここにドラッグ";
 "filter_string_content" = "文字列内容をフィルタ（長さ、タイプなど）";
 "filter_duplicate_strings" = "重複文字列をフィルタ";
+"scanning_progress" = "スキャン中: %@";
+"found_items" = "%d 項目が見つかりました";
+"character_count" = "%d 文字";
+"item_count" = "%d 項目";
+"removed_items" = "削除: %d 項目";
+"time_taken" = "所要時間: %@秒";
+"drag_folder_not_file" = "ファイルではなくフォルダをドラッグしてください";
 
 // Subscription View
 "Subscription" = "サブスクリプション";
