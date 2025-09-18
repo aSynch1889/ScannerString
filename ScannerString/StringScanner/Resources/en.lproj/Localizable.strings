@@ -132,7 +132,8 @@
 "removed_items" = "Removed: %d items";
 "time_taken" = "Time taken: %@ seconds";
 "drag_folder_not_file" = "Please drag a folder, not a file";
-"" = "";
+"file_progress" = "%d/%d files";
+"item_progress" = "%d/%d items";
 "" = "";
 "" = "";
 "" = "";

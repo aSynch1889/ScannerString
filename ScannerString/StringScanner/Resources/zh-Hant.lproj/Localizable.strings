@@ -135,6 +135,8 @@
 "removed_items" = "移除: %d 項";
 "time_taken" = "耗時: %@秒";
 "drag_folder_not_file" = "請拖拽資料夾而非檔案";
+"file_progress" = "%d/%d檔案";
+"item_progress" = "%d/%d 項";
 
 // Subscription View
 "Subscription" = "訂閱";

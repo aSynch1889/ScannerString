@@ -135,6 +135,8 @@
 "removed_items" = "削除: %d 項目";
 "time_taken" = "所要時間: %@秒";
 "drag_folder_not_file" = "ファイルではなくフォルダをドラッグしてください";
+"file_progress" = "%d/%dファイル";
+"item_progress" = "%d/%d 項目";
 
 // Subscription View
 "Subscription" = "サブスクリプション";

@@ -157,7 +157,8 @@ struct SidebarView: View {
                                     .accentColor(.accentColor)
                                 
                                 HStack {
-                                    Text("\(viewModel.processedFiles)/\(viewModel.totalFiles) 文件".localized)
+                                    Text(String(format: "file_progress".localized, arguments: [viewModel.processedFiles, viewModel.totalFiles]))
+//                                    Text("\(viewModel.processedFiles)/\(viewModel.totalFiles) 文件".localized)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                     
@@ -373,7 +374,8 @@ struct ResultsView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         } else if let filterResult = viewModel.filterResult {
-                            Text("\(filterResult.filteredCount)/\(filterResult.originalCount) 项".localized)
+                            Text(String(format: "item_progress".localized, arguments: [filterResult.filteredCount,filterResult.originalCount]))
+//                            Text("\(filterResult.filteredCount)/\(filterResult.originalCount) 项".localized)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -510,7 +512,8 @@ struct LanguageDistributionView: View {
 
                                 Spacer()
 
-                                Text("\(count) 项")
+                                Text(String(format: "item_count".localized, count))
+//                                Text("\(count) 项")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
 
